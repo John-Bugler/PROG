@@ -1,0 +1,40 @@
+#OOP
+
+class Nemovitost:
+      def calculate_RC (self,m3,jc):                                                                              # metoda pocita reprodukcni cenu
+       return m3*jc
+
+      def calculate_OPOTREBENI (self,age,life):                                                                   # metoda pocita opotrebeni
+       return (age/life)*100
+
+      def print_nemovitost (self,m3,jc,age,life):
+       return (print(
+                     "\n-------------------------------\n"
+                     "Sheet of nemovitost :"
+                     ,self.name,"\n"
+                     ,"RC = ",self.calculate_RC(self.m3, self.jc),"Kč \n"
+                     ,"opotrebeni = ",self.calculate_OPOTREBENI(self.age, self.life), "% \n"
+                    )
+              )
+
+nem1 = Nemovitost()                                                                                               # instance tridy Nemovitost
+nem1.name = "rodinný dům č.p.224, Nová ves"
+nem1.m3 = 500                                                                                                     # deklarace parametru tridy
+nem1.jc = 7500
+nem1.age = 11
+nem1.life = 100
+
+
+nem2 = Nemovitost()                                                                                               # instance tridy Nemovitost
+nem2.name = "rodinný dům č.p.666, Peklo"
+nem2.m3 = 1500                                                                                                     # deklarace parametru tridy
+nem2.jc = 9500
+nem2.age = 9                                                                                                      # deklarace parametru tridy
+nem2.life = 100
+
+
+print("Reprodukcni cena nemovitosti :", nem1.name, " = ", nem1.calculate_RC(nem1.m3, nem1.jc), "Kč")              # pouziti jednotlivych metod tridy
+print("Opotrebeni nemovitosti :", nem2.name, " = ", nem2.calculate_OPOTREBENI(nem2.age, nem2.life),"%")           # pouziti jednotlivych metod tridy
+
+nem1.print_nemovitost(nem1.m3, nem1.jc, nem1.age, nem1.life)                                                      # pouziti metody print_nemovitost, ktera sama vola dalsi metody
+nem2.print_nemovitost(nem2.m3, nem2.jc, nem2.age, nem2.life)
