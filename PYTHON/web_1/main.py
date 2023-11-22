@@ -8,9 +8,11 @@ html_content = """
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet" type="text/css" href="styles.css">
     <title>Moje První HTML Stránka</title>
 </head>
 <body>
+    
     <h1>Vítejte na mé první HTML stránce!</h1>
     <p>Toto je jednoduchý příklad.</p>
 </body>
@@ -30,3 +32,4 @@ absolute_path = os.path.abspath(html_file_path)
 
 # Otevřeme výchozí webový prohlížeč s vytvořenou HTML stránkou
 webbrowser.open('file://' + absolute_path)
+
