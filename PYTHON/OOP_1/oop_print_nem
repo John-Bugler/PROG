@@ -38,3 +38,4 @@ print("Opotrebeni nemovitosti :", nem2.name, " = ", nem2.calculate_OPOTREBENI(ne
 
 nem1.print_nemovitost(nem1.m3, nem1.jc, nem1.age, nem1.life)                                                      # pouziti metody print_nemovitost, ktera sama vola dalsi metody
 nem2.print_nemovitost(nem2.m3, nem2.jc, nem2.age, nem2.life)
+
