@@ -21,13 +21,13 @@ nem1 = Nemovitost()                                                             
 nem1.name = "rodinný dům č.p.224, Nová ves"
 nem1.m3 = 500                                                                                                     # deklarace parametru tridy
 nem1.jc = 7500
-nem1.age = 11
-nem1.life = 100
+nem1.age = 11 
+nem1.life = 80
 
 
 nem2 = Nemovitost()                                                                                               # instance tridy Nemovitost
 nem2.name = "rodinný dům č.p.666, Peklo"
-nem2.m3 = 1500                                                                                                     # deklarace parametru tridy
+nem2.m3 = 1500                                                                                                    # deklarace parametru tridy
 nem2.jc = 9500
 nem2.age = 9                                                                                                      # deklarace parametru tridy
 nem2.life = 100
@@ -38,4 +38,10 @@ print("Opotrebeni nemovitosti :", nem2.name, " = ", nem2.calculate_OPOTREBENI(ne
 
 nem1.print_nemovitost(nem1.m3, nem1.jc, nem1.age, nem1.life)                                                      # pouziti metody print_nemovitost, ktera sama vola dalsi metody
 nem2.print_nemovitost(nem2.m3, nem2.jc, nem2.age, nem2.life)
+
+
+
+
+
+
 
