@@ -1,5 +1,6 @@
 from flask import render_template
-from webrevolut import app
+#from webrevolut import app
+from . import app
 from database import get_data
 
 @app.route('/')
