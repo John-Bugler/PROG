@@ -1,4 +1,4 @@
-from web_2_revolut_data import app
+from webrevolut import app
 
 if __name__ == '__main__':
     app.run(debug=True)
