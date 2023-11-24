@@ -1,5 +1,5 @@
 from flask import render_template
-from app import app
+from web_2_revolut_data import app
 from database import get_data
 
 @app.route('/')
