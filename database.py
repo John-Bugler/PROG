@@ -23,8 +23,8 @@ def get_data():
                         act_prices.timestamp as actual_price_date,
                  		-- pocet zaznamu s cenami 
                  		(select count(timestamp) from [reports].[dbo].[revolut_stocks_prices] where ticker = portfolio.ticker) as act_prices_count,
-                        format(
-                            round(((act_prices.close_price / nullif(round(sum(portfolio.quantity * portfolio.price) / sum(portfolio.quantity), 2), 0)) - 1) * 100, 1), '0.0'
+                        cast(
+                             round(((act_prices.close_price / nullif(round(sum(portfolio.quantity * portfolio.price) / sum(portfolio.quantity), 2), 0)) - 1) * 100, 1) as decimal(5,1)
                         ) as profit
                     from 
                         [reports].[dbo].[revolut_stocks] portfolio
@@ -36,7 +36,16 @@ def get_data():
                     group by 
                         portfolio.ticker, act_prices.timestamp, act_prices.close_price
                     )                  
-                select *
+                select 
+                      ticker, 
+                      trades,
+                      quantity, 
+                      avg_price, 
+                      wavg_price, 
+                      actual_price, 
+                      actual_price_date,
+                      act_prices_count,
+                      profit
                 from rankedrows
                 where row_num = 1
                 order by ticker asc, actual_price_date desc;
@@ -49,3 +58,21 @@ def get_data():
     data = [dict(zip(columns, row)) for row in rows]
 
     return data
+
+
+# odtud dolu je to testovaci kod aby vse bzlo v jednom fajlu
+
+from flask import Flask, render_template
+
+app = Flask(__name__)
+@app.route('/')
+def index():
+    data = get_data()
+    #print(data[1])
+    return render_template('index.html', data=data)
+
+import webbrowser
+
+if __name__ == '__main__':
+    webbrowser.open('http://127.0.0.1:5000/')
+    app.run(debug=True)
