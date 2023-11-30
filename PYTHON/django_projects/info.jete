@@ -1,0 +1,56 @@
+virtualni prostredi = virtualne oddeleny pc/system/whaever ... na kterem bezi dana aplikace, v ramci ENV musi byy nainstalovany vsechny balicky
+ktere maji byt vyuzivany....
+
+nástroj virtualenvwrapper slouží k správě virtuálních prostředí v Pythonu :
+pip install virtualenvwrapper-win
+
+
+
+
+vytvoreni virualniho prostredi :
+C:\Users\ijttr\OneDrive\Dokumenty\PROG\PYTHON\django_projects>mkvirtualenv env_revolut
+
+
+vytvori virtualni prostredi v default adresari \Envs = C:\Users\ijttr\Envs\env_revolut
+
+
+instalace djanga do virtualniho prostredi :
+(env_revolut) C:\Users\ijttr\OneDrive\Dokumenty\PROG\PYTHON\django_projects>pip install django
+
+
+
+vytvoreni projektu v ramci virtualniho prostredi env_revolut :
+(env_revolut) C:\Users\ijttr\OneDrive\Dokumenty\PROG\PYTHON\django_projects>django-admin startproject revolut
+
+
+V terminalu VSCode je potreba spustit virtualni prostredi ve kterem budu pracovat : 
+PS C:\Users\ijttr\OneDrive\Dokumenty\PROG\PYTHON\django_projects\revolut> workon env_revolut
+
+
+V ramci meho projektu revolut vytvorim "pod projekt" dilci aplikaci projektu, ta se bude jmenovat "stocks"
+dale v ramci projektu revolut lze vytvaret dalsi aplikace napr. "crypto, sporeni, ... atd." 
+(env_revolut) C:\Users\ijttr\OneDrive\Dokumenty\PROG\PYTHON\django_projects\revolut>python manage.py startapp stocks
+
+
+spusteni serveru :
+(env_revolut) C:\Users\ijttr\OneDrive\Dokumenty\PROG\PYTHON\django_projects\revolut>python manage.py runserver
+Watching for file changes with StatReloader
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+You have 18 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): admin, auth, contenttypes, sessions.
+Run 'python manage.py migrate' to apply them.
+November 29, 2023 - 13:19:45
+Django version 4.2.7, using settings 'revolut.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CTRL-BREAK.
+
+
+pokud otevru :  http://127.0.0.1:8000/    objevi se Django = The install worked successfully! Congratulations!
+
+jedna se o virtualni server djanga na kterem bezi dane webove aplikace
+
+------------------------------
+
+vylistuje seznam virtualnich prostredi = obsah slozky \Envs : lsvirtualenv

@@ -3,9 +3,9 @@ from flask import Flask, render_template
 from db_connector import create_connection, get_data
 from data_processing import process_data
 
-app = Flask(__name__)
+webrevolut = Flask(__name__)
 
-@app.route('/')
+@webrevolut.route('/')
 def index():
     connection = create_connection()
     columns, rows = get_data(connection)
@@ -16,4 +16,4 @@ import webbrowser
 
 if __name__ == '__main__':
     webbrowser.open('http://127.0.0.1:5000/')
-    app.run(debug=True)
+    webrevolut.run(host='0.0.0.0', port=5000, debug=True)
