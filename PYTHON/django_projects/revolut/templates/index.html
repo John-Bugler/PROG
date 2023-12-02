@@ -1,0 +1,56 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+    <title>Stocks data Visualization</title>
+</head>
+<body>
+    <h1>Index................</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Ticker</th>
+                <th>Trades</th>
+                <th>Quantity</th>
+                <th>Avg Price</th>
+                <th>Weighted Avg Price</th>
+                <th>Actual Price</th>
+                <th>Actual Price Date</th>
+                <th>Actual Prices Count</th>
+                <th>Profit</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+                <tr>
+                    <td>{{ row.ticker }}</td>
+                    <td>{{ row.trades }}</td>
+                    <td>{{ row.quantity }}</td>
+                    <td>{{ row.avg_price }}</td>
+                    <td>{{ row.wavg_price }}</td>
+                    <td>{{ row.actual_price }}</td>
+                    <td>{{ row.actual_price_date }}</td>
+                    <td>{{ row.act_prices_count }}</td>
+                    <td 
+                    ="{{ row.profit }}">{{ row.profit }}</td>
+                    <!--
+                    <td data-profit="{{ row.profit }}">
+                        {% if row.profit is number %}
+                          {{ row.profit }} (číslo)
+                        {% else %}
+                          {{ row.profit }} (řetězec)
+                        {% endif %}
+                      </td>
+                    -->  
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

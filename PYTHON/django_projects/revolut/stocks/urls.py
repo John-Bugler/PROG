@@ -2,6 +2,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.index, name='index'),             # '' nedefinovana url = http://localhost:8080/
-    path('revolut/', views.index, name='revolut')    # revolut/ definovana url = http://localhost:8080/revolut/
+    path('', views.index, name='index'),                  # '' nedefinovana url = http://localhost:8080/
+    path('stocks/', views.stocks_view, name='stocks'),    # revolut/ definovana url = http://localhost:8080/revolut/
 ]

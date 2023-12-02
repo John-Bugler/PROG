@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'revolut',
+    'mssql',
+    'stocks',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +57,9 @@ ROOT_URLCONF = 'revolut.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        #'DIRS': [BASE_DIR, 'templates'],             # directories - zakladni adresar pro templates projektu
+        'DIRS': [r'C:\Users\ijttr\OneDrive\Dokumenty\PROG\PYTHON\django_projects\revolut\templates'],   # pouzita explicirni cesta
+
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -73,11 +78,25 @@ WSGI_APPLICATION = 'revolut.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'mssql',
+        'NAME': 'reports',
+        'HOST': 'localhost',
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+            'host_is_server': True,
+            'trusted_connection': True,
+        },
+    },
 }
 
 
@@ -115,7 +134,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+#STATICFILES_DIRS = [BASE_DIR, 'static']          # directories - zakladni adresar pro static
+STATICFILES_DIRS = [r'C:\Users\ijttr\OneDrive\Dokumenty\PROG\PYTHON\django_projects\revolut\static']
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

@@ -1,0 +1,54 @@
+body {
+   background-color: #1d1c18;
+   color: #ffffff;
+   font-family: 'Arial', sans-serif;
+   font-size: small;
+}
+
+h1 {
+   color: #e5bda6;
+   /* color: #f5df86; */
+}
+
+table {
+   width: 100%;
+   border-collapse: collapse;
+   margin-top: 20px;
+}
+
+th, td {
+   border: 1px solid #444;
+   padding: 5px;
+   text-align: left;
+   white-space: nowrap; /* zabrání zalomení obsahu na nový řádek */
+   overflow: hidden; /* skryje přebytečný obsah */
+   text-overflow: ellipsis; /* zobrazí "..." pro přebytečný obsah */
+}
+
+th {
+   background-color: #333;
+   color: #fff;
+}
+
+tr:nth-child(even) {
+   background-color: #444;
+}
+
+tr:hover {
+   background-color: #555;
+}
+
+td[data-profit*="-"] {
+   /* styl pro záporné hodnoty */
+   color: red;
+}
+
+td[data-profit="None"] {
+   /* styl pro hodnoty None */
+   color: rgb(253, 252, 252);
+}
+
+td[data-profit]:not([data-profit*="-"]):not([data-profit="None"]) {
+   /* styl pro kladné hodnoty */
+   color: rgb(25, 250, 25);
+}
