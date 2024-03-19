@@ -1,0 +1,4 @@
+SELECT * FROM country_1
+UNION ALL
+SELECT * FROM country_2
+;

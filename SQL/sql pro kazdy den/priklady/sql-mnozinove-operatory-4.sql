@@ -1,0 +1,4 @@
+SELECT * FROM country_1
+INTERSECT
+SELECT * FROM country_2
+;
