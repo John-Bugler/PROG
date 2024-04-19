@@ -52,3 +52,13 @@ td[data-profit]:not([data-profit*="-"]):not([data-profit="None"]) {
    /* styl pro kladné hodnoty */
    color: rgb(25, 250, 25);
 }
+
+a {
+   color: #f59259; /* barva textu */
+   text-decoration: none; /* odstranění podtržení */
+ }
+ 
+ a:hover {
+   color: #e5bda6;; /* barva textu po najetí myší */
+ }
+ 
