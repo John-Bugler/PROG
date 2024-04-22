@@ -54,3 +54,11 @@ jedna se o virtualni server djanga na kterem bezi dane webove aplikace
 ------------------------------
 
 vylistuje seznam virtualnich prostredi = obsah slozky \Envs : lsvirtualenv
+
+
+migrace dat/tabulek do projektu :
+
+(env_revolut) C:\Users\ijttr\OneDrive\Dokumenty\PROG\PYTHON\django_projects\revolut>python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, sessions, stocks
+Running migrations:

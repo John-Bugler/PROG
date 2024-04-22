@@ -3,8 +3,10 @@ from django.db import connection
 
 class StockData(models.Model):
     ticker = models.CharField(max_length=10)
+    currency = models.CharField(max_length=5)
     trades = models.IntegerField()
     quantity = models.DecimalField(max_digits=10, decimal_places=2)
+    value = models.DecimalField(max_digits=10, decimal_places=2)
     avg_price = models.DecimalField(max_digits=10, decimal_places=2)
     wavg_price = models.DecimalField(max_digits=10, decimal_places=2)
     actual_price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -22,20 +24,25 @@ class StockData(models.Model):
     def get_data(cls):
         with connection.cursor() as cursor:
             cursor.execute('''
-                with rankedrows as (
+                 with rankedrows as (
                     select  
                         row_number() over (partition by portfolio.ticker order by act_prices.timestamp desc) as row_num, 
-                        portfolio.ticker, 
+                        portfolio.ticker,
+                        portfolio.currency,   
                         count(portfolio.type) as trades,
-                        format(round(sum(portfolio.quantity), 2), '0.###') as quantity, 
+                        format(round(sum(portfolio.quantity), 2), '0.###') as quantity,
+                           
+                        format(round(sum(portfolio.quantity * act_prices.close_price), 2), '0.###') as actual_value, 
                         format(round(avg(portfolio.price), 2), '0.###') as avg_price, 
                         format(round(sum(portfolio.quantity * portfolio.price) / sum(portfolio.quantity), 2), '0.###') as wavg_price, 
                         format(act_prices.close_price, '0.0') as actual_price,		
                         act_prices.timestamp as actual_price_date,
-                        (select count(timestamp) from [reports].[dbo].[revolut_stocks_prices] where ticker = portfolio.ticker) as act_prices_count,
-                        cast(
-                            round(((act_prices.close_price / nullif(round(sum(portfolio.quantity * portfolio.price) / sum(portfolio.quantity), 2), 0)) - 1) * 100, 1) as decimal(5,1)
-                        ) as profit
+                 		-- pocet zaznamu s cenami 
+                 		(select count(timestamp) from [reports].[dbo].[revolut_stocks_prices] where ticker = portfolio.ticker) as act_prices_count,
+                        
+                            cast(
+                                  round(((act_prices.close_price / nullif(round(sum(portfolio.quantity * portfolio.price) / sum(portfolio.quantity), 2), 0)) - 1) * 100, 1) as decimal(5,1)
+                            ) as profit
                     from 
                         [reports].[dbo].[revolut_stocks] portfolio
                     left join 
@@ -44,18 +51,20 @@ class StockData(models.Model):
                         portfolio.price > 0
                         and portfolio.type = 'buy - market'
                     group by 
-                        portfolio.ticker, act_prices.timestamp, act_prices.close_price
-                )                  
+                        portfolio.ticker, portfolio.currency, act_prices.timestamp, act_prices.close_price
+                    )                  
                 select 
-                    ticker, 
-                    trades,
-                    quantity, 
-                    avg_price, 
-                    wavg_price, 
-                    actual_price, 
-                    actual_price_date,
-                    act_prices_count,
-                    profit
+                      ticker, 
+                      trades,
+                      currency,
+                      quantity, 
+                      actual_value,
+					  avg_price, 
+                      wavg_price, 
+                      actual_price, 
+                      actual_price_date,
+                      act_prices_count,
+                      profit
                 from rankedrows
                 where row_num = 1
                 order by ticker asc, actual_price_date desc;
