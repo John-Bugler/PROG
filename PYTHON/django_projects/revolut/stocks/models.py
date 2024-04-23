@@ -1,6 +1,8 @@
 from django.db import models
 from django.db import connection
 
+
+#Detailni prehled investic po spolecnostech
 class StockData(models.Model):
     ticker = models.CharField(max_length=10)
     currency = models.CharField(max_length=5)
@@ -75,6 +77,8 @@ class StockData(models.Model):
         return columns, rows
 
 
+
+#Prehled investic a dividend po letech
 class StockYearsOverview(models.Model):
     year = models.DateTimeField()
     investment = models.DecimalField(max_digits=10, decimal_places=2)
