@@ -16,7 +16,7 @@ class StockData(models.Model):
     act_prices_count = models.IntegerField()
     profit = models.DecimalField(max_digits=10, decimal_places=1)
 
-    class Meta:
+    class Meta: 
         ordering = ['ticker', '-actual_price_date']
 
     def __str__(self):
