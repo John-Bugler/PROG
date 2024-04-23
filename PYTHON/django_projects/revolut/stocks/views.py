@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import StockData
+from .models import StockData, StockYearsOverview
 
 
 # Create your views here.
@@ -17,7 +17,11 @@ from .models import StockData
 
 
 def index(request) :
-    return render(request, 'index.html')
+    columns, rows = StockYearsOverview.get_data()
+    print("Columns:", columns)
+    print("Rows:", rows)
+    context = {'columns': columns, 'rows': rows}
+    return render(request, 'index.html', context)
 
 
 def stocks_view(request):
@@ -29,4 +33,4 @@ def stocks_view(request):
 
 
 # def stocks_view(request):
-#     return HttpResponse('<h1>Test</h1>')
+# return HttpResponse('<h1>Test</h1>')

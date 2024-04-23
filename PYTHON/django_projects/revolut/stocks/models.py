@@ -18,7 +18,7 @@ class StockData(models.Model):
         ordering = ['ticker', '-actual_price_date']
 
     def __str__(self):
-        return f"{self.ticker} - {self.actual_price_date}"
+        return f"{self.year} - {self.investment}"
 
     @classmethod
     def get_data(cls):
@@ -55,19 +55,60 @@ class StockData(models.Model):
                     )                  
                 select 
                       ticker, 
-                      trades,
                       currency,
+                      trades,     
                       quantity, 
                       actual_value,
-					  avg_price, 
+					  profit,
+                      avg_price, 
                       wavg_price, 
                       actual_price, 
                       actual_price_date,
-                      act_prices_count,
-                      profit
+                      act_prices_count
                 from rankedrows
                 where row_num = 1
                 order by ticker asc, actual_price_date desc;
+            ''')
+            columns = [column[0] for column in cursor.description]
+            rows = cursor.fetchall()
+
+        return columns, rows
+
+
+class StockYearsOverview(models.Model):
+    year = models.DateTimeField()
+    investment = models.DecimalField(max_digits=10, decimal_places=2)
+    dividend = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        ordering = ['year']
+
+    def __str__(self):
+        return f"{self.ticker} - {self.actual_price_date}"
+
+    @classmethod
+    def get_data(cls):
+        with connection.cursor() as cursor:
+            cursor.execute('''
+                select
+                    year(date) as year,
+                    (
+                        select round(sum(amount), 2)
+                        from [reports].[dbo].[revolut_stocks] sub
+                        where sub.type = 'buy - market' and year(sub.date) = year(r.date)
+                    ) as 'investment',
+                    
+                    (
+                        select round(sum(amount), 2)
+                        from [reports].[dbo].[revolut_stocks] sub
+                        where sub.type = 'dividend' and year(sub.date) = year(r.date)
+                    ) as 'dividend'
+
+                from [reports].[dbo].[revolut_stocks] r
+                where r.type = 'buy - market' or r.type = 'dividend'
+                group by year(date)
+                order by year desc;
+                
             ''')
             columns = [column[0] for column in cursor.description]
             rows = cursor.fetchall()

@@ -12,52 +12,42 @@
 </head>
 <body>
     <h1>JeTe's Django Python WEB</h1>
+    <div style="width: 20%;">
+        <table border="1">
+            <thead>
+                <tr>
+                    {% for column in columns %}
+                        <th>{{ column }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                    <tr>
+                        {% for value in row %}
+                            {% if forloop.counter == 6 %} {# sloupec profitu (počítáno od 1) - formatovani stylu#}
+                                <td class="profit-cell" data-profit="{{ value }}">
+                                {{ value }}
+                                </td>
+                            {% else %}
+                                <td>{{ value }}</td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <br>
     <a href="http://localhost:8080/stocks/">Stocks data Visualization</a><br>
     <a href="http://ryzen5/Reports/report/Revolut_stocks_report/Revolut%20stocks">Stocks in SQL reporting services</a><br>
     <br>
     <br>
-    <div style="width: 100%;"></div>
+    <div style="width: 100%;">
         <iframe width="50%" height="420" frameborder="0" src="https://www.theblock.co/data/crypto-markets/prices/btc-price/embed" title="BTC Price"></iframe>
         <iframe width="50%" height="420" frameborder="0" src="https://www.theblock.co/data/crypto-markets/bitcoin-etf/spot-bitcoin-etf-onchain-flows/embed" title="Spot Bitcoin ETF On-Chain Flows in BTC (Daily)"></iframe>
     </bodydiv>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Ticker</th>
-                <th>Trades</th>
-                <th>Quantity</th>
-                <th>Avg Price</th>
-                <th>Weighted Avg Price</th>
-                <th>Actual Price</th>
-                <th>Actual Price Date</th>
-                <th>Actual Prices Count</th>
-                <th>Profit</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for row in data %}
-                <tr>
-                    <td>{{ row.ticker }}</td>
-                    <td>{{ row.trades }}</td>
-                    <td>{{ row.quantity }}</td>
-                    <td>{{ row.avg_price }}</td>
-                    <td>{{ row.wavg_price }}</td>
-                    <td>{{ row.actual_price }}</td>
-                    <td>{{ row.actual_price_date }}</td>
-                    <td>{{ row.act_prices_count }}</td>
-                    <td {{ row.profit }}>{{ row.profit }}</td>
-                    <!--
-                    <td data-profit="{{ row.profit }}">
-                        {% if row.profit is number %}
-                          {{ row.profit }} (číslo)
-                        {% else %}
-                          {{ row.profit }} (řetězec)
-                        {% endif %}
-                      </td>
-                    -->  
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    
 </body>
 </html>
