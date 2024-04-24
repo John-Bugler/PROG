@@ -25,13 +25,12 @@
                 {% for row in rows %}
                     <tr>
                         {% for value in row %}
-                            {% if forloop.counter == 6 %} {# sloupec profitu (počítáno od 1) - formatovani stylu#}
-                                <td class="profit-cell" data-profit="{{ value }}">
-                                {{ value }}
-                                </td>
+                            {% if forloop.first %} {# Pro první sloupec #}
+                                  <td><a href="http://127.0.0.1:8080/stocks_by_year/{{ value }}">{{ value }}</a></td>
                             {% else %}
-                                <td>{{ value }}</td>
+                                  <td>{{ value }}</td>
                             {% endif %}
+
                         {% endfor %}
                     </tr>
                 {% endfor %}

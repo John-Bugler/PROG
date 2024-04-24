@@ -1,0 +1,43 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+    <title>Stocks data Visualization by Year </title>
+</head>
+<body>
+    <h1>Stocks data Visualization by YEAR</h1>
+    <a href="http://ryzen5/Reports/report/Revolut_stocks_report/Revolut%20stocks">Stocks in SQL reporting services</a><br>
+    <table border="1">
+        <thead>
+            <tr>
+                {% for column in columns %}
+                    <th>{{ column }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+                <tr>
+                    {% for value in row %}
+                        {% if forloop.counter == 6 %} {# sloupec profitu (počítáno od 1) - formatovani stylu#}
+                            <td class="profit-cell" data-profit="{{ value }}">
+                            {{ value }}
+                            </td>
+                         {% else %}
+                            <td>{{ value }}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+</body>
+</html>

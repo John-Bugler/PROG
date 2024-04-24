@@ -17,6 +17,7 @@ from .models import StockData, StockYearsOverview
 
 
 def index(request) :
+    print("--------------------------------TEST-def index-------------------------------------")
     columns, rows = StockYearsOverview.get_data()
     print("Columns:", columns)
     print("Rows:", rows)
@@ -24,13 +25,25 @@ def index(request) :
     return render(request, 'index.html', context)
 
 
-def stocks_view(request):
+def stocks(request):
+    print("--------------------------------TEST-def stocks-------------------------------------")
     columns, rows = StockData.get_data()
     print("Columns:", columns)
     print("Rows:", rows)
     context = {'columns': columns, 'rows': rows}
     return render(request, 'stocks.html', context)
 
+#def stocks_by_year(request, year):
+def stocks_by_year(request):
+    print("--------------------------------TEST-def stocks_by_year-------------------------------------")
+    #print(year)
+    #columns, rows = StockData.get_data_by_year(year)
+    columns, rows = StockData.get_data_by_year()
+    print("Columns:", columns)
+    print("Rows:", rows)
+    #context = {'columns': columns, 'rows': rows, 'year': year}
+    context = {'columns': columns, 'rows': rows}
+    return render(request, 'stocks_by_year.html', context)
 
 # def stocks_view(request):
 # return HttpResponse('<h1>Test</h1>')

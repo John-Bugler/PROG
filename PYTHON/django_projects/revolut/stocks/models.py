@@ -1,5 +1,6 @@
 from django.db import models
 from django.db import connection
+#import urllib.parse
 
 
 #Detailni prehled investic po spolecnostech
@@ -23,7 +24,8 @@ class StockData(models.Model):
         return f"{self.year} - {self.investment}"
 
     @classmethod
-    def get_data(cls):
+    def get_data(cls):    # dotaz na cele portfolio bez omezeni 
+        print("--------------------------------TEST-def get_data - START-------------------------------------")
         with connection.cursor() as cursor:
             cursor.execute('''
                  with rankedrows as (
@@ -76,8 +78,29 @@ class StockData(models.Model):
             ''')
             columns = [column[0] for column in cursor.description]
             rows = cursor.fetchall()
-
+            print("--------------------------------TEST-def get_data - END-------------------------------------")
         return columns, rows
+
+
+
+    @classmethod
+    def get_data_by_year(cls):    # dotaz na cele portfolio s omezenim = rozsah dle pozadovaneho roku
+            print("--------------------------------TEST-def get_data_by_year - START-------------------------------------")
+            with connection.cursor() as cursor:
+                sql = """
+                    select * 
+                    from [reports].[dbo].[revolut_stocks] portfolio 
+                    where portfolio.price > 0 
+                    and portfolio.type = 'buy - market' 
+                    
+                """
+                print(sql)
+                cursor.execute(sql)
+                columns = [column[0] for column in cursor.description]
+                rows = cursor.fetchall()
+                print("--------------------------------TEST-def get_data_by_year - END-------------------------------------")
+            return columns, rows
+
 
 
 
