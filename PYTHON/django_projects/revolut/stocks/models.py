@@ -35,6 +35,8 @@ class StockData(models.Model):
                         format(round(sum(portfolio.quantity), 2), '0.###') as quantity,
                            
                         format(round(sum(portfolio.quantity * act_prices.close_price), 2), '0.###') as actual_value, 
+                        round(sum(portfolio.quantity * act_prices.close_price), 2) as num_actual_value, 
+
                         format(round(avg(portfolio.price), 2), '0.###') as avg_price, 
                         format(round(sum(portfolio.quantity * portfolio.price) / sum(portfolio.quantity), 2), '0.###') as wavg_price, 
                         format(act_prices.close_price, '0.0') as actual_price,		
@@ -69,7 +71,8 @@ class StockData(models.Model):
                       act_prices_count
                 from rankedrows
                 where row_num = 1
-                order by ticker asc, actual_price_date desc;
+                --order by ticker asc, actual_price_date desc;
+                  order by num_actual_value desc;         
             ''')
             columns = [column[0] for column in cursor.description]
             rows = cursor.fetchall()
@@ -100,13 +103,13 @@ class StockYearsOverview(models.Model):
                         select round(sum(amount), 2)
                         from [reports].[dbo].[revolut_stocks] sub
                         where sub.type = 'buy - market' and year(sub.date) = year(r.date)
-                    ) as 'investment',
+                    ) as '$investment',
                     
                     (
                         select round(sum(amount), 2)
                         from [reports].[dbo].[revolut_stocks] sub
                         where sub.type = 'dividend' and year(sub.date) = year(r.date)
-                    ) as 'dividend'
+                    ) as '$dividend'
 
                 from [reports].[dbo].[revolut_stocks] r
                 where r.type = 'buy - market' or r.type = 'dividend'
