@@ -84,9 +84,10 @@ class StockData(models.Model):
 
 
     @classmethod
+    #def get_data_by_year(cls, year):    # dotaz na cele portfolio s omezenim = rozsah dle pozadovaneho roku
     def get_data_by_year(cls):    # dotaz na cele portfolio s omezenim = rozsah dle pozadovaneho roku
-            print("--------------------------------TEST-def get_data_by_year - START-------------------------------------")
-            with connection.cursor() as cursor:
+        print("--------------------------------TEST-def get_data_by_year - START-------------------------------------")
+        with connection.cursor() as cursor:
                 sql = """
                     select * 
                     from [reports].[dbo].[revolut_stocks] portfolio 
@@ -95,11 +96,12 @@ class StockData(models.Model):
                     
                 """
                 print(sql)
+                #cursor.execute(sql, {'year': year})
                 cursor.execute(sql)
                 columns = [column[0] for column in cursor.description]
                 rows = cursor.fetchall()
                 print("--------------------------------TEST-def get_data_by_year - END-------------------------------------")
-            return columns, rows
+        return columns, rows
 
 
 
