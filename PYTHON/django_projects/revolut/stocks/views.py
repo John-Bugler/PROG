@@ -33,16 +33,16 @@ def stocks(request):
     context = {'columns': columns, 'rows': rows}
     return render(request, 'stocks.html', context)
 
-#def stocks_by_year(request, year):
-def stocks_by_year(request):
+def stocks_by_year(request, year):
+#def stocks_by_year(request):
     print("--------------------------------TEST-def stocks_by_year-------------------------------------")
-    #print(year)
-    #columns, rows = StockData.get_data_by_year(year)
-    columns, rows = StockData.get_data_by_year()
+    print(year)
+    columns, rows = StockData.get_data_by_year(year)
+    #columns, rows = StockData.get_data_by_year()
     print("Columns:", columns)
     print("Rows:", rows)
-    #context = {'columns': columns, 'rows': rows, 'year': year}
-    context = {'columns': columns, 'rows': rows}
+    context = {'columns': columns, 'rows': rows, 'year': year}
+    #context = {'columns': columns, 'rows': rows}
     return render(request, 'stocks_by_year.html', context)
 
 # def stocks_view(request):

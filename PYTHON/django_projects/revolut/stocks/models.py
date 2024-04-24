@@ -84,20 +84,66 @@ class StockData(models.Model):
 
 
     @classmethod
-    #def get_data_by_year(cls, year):    # dotaz na cele portfolio s omezenim = rozsah dle pozadovaneho roku
-    def get_data_by_year(cls):    # dotaz na cele portfolio s omezenim = rozsah dle pozadovaneho roku
+    def get_data_by_year(cls, year):    # dotaz na cele portfolio s omezenim = rozsah dle pozadovaneho roku
+    #def get_data_by_year(cls):    # dotaz na cele portfolio s omezenim = rozsah dle pozadovaneho roku
         print("--------------------------------TEST-def get_data_by_year - START-------------------------------------")
         with connection.cursor() as cursor:
                 sql = """
-                    select * 
-                    from [reports].[dbo].[revolut_stocks] portfolio 
-                    where portfolio.price > 0 
-                    and portfolio.type = 'buy - market' 
+                    with rankedrows as (
+                    select  
+                        row_number() over (partition by portfolio.ticker order by act_prices.timestamp desc) as row_num, 
+                        portfolio.date,
+                        portfolio.ticker,
+                        portfolio.currency,   
+                        count(portfolio.type) as trades,
+                        format(round(sum(portfolio.quantity), 2), '0.###') as quantity,
+                           
+                        format(round(sum(portfolio.quantity * act_prices.close_price), 2), '0.###') as actual_value, 
+                        round(sum(portfolio.quantity * act_prices.close_price), 2) as num_actual_value, 
+
+                        format(round(avg(portfolio.price), 2), '0.###') as avg_price, 
+                        format(round(sum(portfolio.quantity * portfolio.price) / sum(portfolio.quantity), 2), '0.###') as wavg_price, 
+                        format(act_prices.close_price, '0.0') as actual_price,		
+                        act_prices.timestamp as actual_price_date,
+                 		-- pocet zaznamu s cenami 
+                 		(select count(timestamp) from [reports].[dbo].[revolut_stocks_prices] where ticker = portfolio.ticker) as act_prices_count,
+                        
+                            cast(
+                                  round(((act_prices.close_price / nullif(round(sum(portfolio.quantity * portfolio.price) / sum(portfolio.quantity), 2), 0)) - 1) * 100, 1) as decimal(5,1)
+                            ) as profit
+                    from 
+                        [reports].[dbo].[revolut_stocks] portfolio
+                    left join 
+                        [reports].[dbo].[revolut_stocks_prices] act_prices on portfolio.ticker = act_prices.ticker
+                    where 
+                        portfolio.price > 0
+                        and portfolio.type = 'buy - market'
+                        and year(portfolio.date) = %s
+                    group by 
+                        portfolio.date, portfolio.ticker, portfolio.currency, act_prices.timestamp, act_prices.close_price
+                    )                  
+                select 
+                      ticker, 
+                      currency,
+                      trades,     
+                      quantity, 
+                      actual_value,
+					  profit,
+                      avg_price, 
+                      wavg_price, 
+                      actual_price, 
+                      actual_price_date,
+                      act_prices_count
+                from rankedrows
+                where row_num = 1
+                  --order by ticker asc, actual_price_date desc;
+                  order by num_actual_value desc;  
                     
                 """
                 print(sql)
+                cursor.execute(sql, (year,))
                 #cursor.execute(sql, {'year': year})
-                cursor.execute(sql)
+                #cursor.execute(sql)
                 columns = [column[0] for column in cursor.description]
                 rows = cursor.fetchall()
                 print("--------------------------------TEST-def get_data_by_year - END-------------------------------------")
