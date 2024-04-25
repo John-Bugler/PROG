@@ -1,6 +1,8 @@
 from django.db import models
 from django.db import connection
-#import urllib.parse
+
+import pandas as pd
+#import matplotlib.pyplot as plt
 
 
 #Detailni prehled investic po spolecnostech
@@ -190,5 +192,9 @@ class StockYearsOverview(models.Model):
             ''')
             columns = [column[0] for column in cursor.description]
             rows = cursor.fetchall()
-
-        return columns, rows
+            #  vytvoreni dataframu z dat dotazu
+            df = pd.DataFrame(rows, columns=columns)    
+            #  prevod dataframu na json se kteryn pak pracuje javasript
+            chart_data = df.to_json(orient='split')     
+            print('chart data : ',chart_data)
+        return columns, rows, chart_data
