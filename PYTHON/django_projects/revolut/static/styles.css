@@ -6,6 +6,7 @@ body {
 }
 
 h1 {
+   font-size: 3vh;
    color: #e5bda6;
    /* color: #f5df86; */
 }
@@ -62,3 +63,14 @@ a {
    color: #e5bda6;; /* barva textu po najetí myší */
  }
  
+ .container {
+   display: flex;
+   align-items: center;
+}
+
+.my-image {
+   width: 5vh;
+   height: auto;
+   margin-right: 20px;
+}
+

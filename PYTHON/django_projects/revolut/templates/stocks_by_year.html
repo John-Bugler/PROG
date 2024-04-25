@@ -8,10 +8,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
-    <title>Stocks data Visualization by Year {{ year }}</title>
+    <title>Stocks data Year {{ year }}</title>
 </head>
 <body>
-    <h1>Stocks data Visualization by YEAR {{ year }}</h1>
+    
+    <div class="container">
+        <a href="http://localhost:8080/"><img src="{% static 'pic/Jete_sims.jpg' %}" alt="JeTe face" class="my-image"></a>
+        <div class="content">
+            <h1>Stocks data Visualization by YEAR {{ year }}</h1>
+        </div>
+    </div>
+    
     <a href="http://ryzen5/Reports/report/Revolut_stocks_report/Revolut%20stocks">Stocks in SQL reporting services</a><br>
     <table border="1">
         <thead>
