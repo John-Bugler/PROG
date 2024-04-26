@@ -30,53 +30,88 @@ class StockData(models.Model):
         print("--------------------------------TEST-def get_data - START-------------------------------------")
         with connection.cursor() as cursor:
             cursor.execute('''
-                 with rankedrows as (
-                    select  
-                        row_number() over (partition by portfolio.ticker order by act_prices.timestamp desc) as row_num, 
-                        portfolio.ticker,
-                        portfolio.currency,   
-                        count(portfolio.type) as trades,
-                        format(round(sum(portfolio.quantity), 2), '0.###') as quantity,
-                           
-                        format(round(sum(portfolio.quantity * act_prices.close_price), 2), '0.###') as actual_value, 
-                        round(sum(portfolio.quantity * act_prices.close_price), 2) as num_actual_value, 
-
-                        format(round(avg(portfolio.price), 2), '0.###') as avg_price, 
-                        format(round(sum(portfolio.quantity * portfolio.price) / sum(portfolio.quantity), 2), '0.###') as wavg_price, 
-                        format(act_prices.close_price, '0.0') as actual_price,		
-                        act_prices.timestamp as actual_price_date,
-                 		-- pocet zaznamu s cenami 
-                 		(select count(timestamp) from [reports].[dbo].[revolut_stocks_prices] where ticker = portfolio.ticker) as act_prices_count,
-                        
+                    -- Prehled portfolia = stock/trades/quantity/weighted price/actual price/PROFIT
+                    with rankedrows as (
+                        select  
+                            row_number() over (partition by portfolio.ticker order by act_prices.timestamp desc) as row_num, 
+                            portfolio.ticker,
+                            portfolio.currency,   
+                            count(portfolio.date) as trades,
+                            format(round(sum(portfolio.quantity), 2), '0.###') as quantity,
+                            round(sum(portfolio.quantity), 2) as num_quantity,
+                            format(round(sum(portfolio.quantity * act_prices.close_price), 2), '0.###') as actual_value, 
+                            round(sum(portfolio.quantity * act_prices.close_price), 2) as num_actual_value, 
+                            format(round(avg(portfolio.price), 2), '0.###') as avg_price, 
+                            format(round(sum(portfolio.quantity * portfolio.price) / sum(portfolio.quantity), 2), '0.###') as wavg_price, 
+                            format(act_prices.close_price, '0.0') as actual_price,
+                            act_prices.close_price as num_actual_price,
+                            act_prices.timestamp as actual_price_date,
+                            -- pocet zaznamu s cenami 
+                            (select count(timestamp) from [reports].[dbo].[revolut_stocks_prices] where ticker = portfolio.ticker) as act_prices_count,
                             cast(
-                                  round(((act_prices.close_price / nullif(round(sum(portfolio.quantity * portfolio.price) / sum(portfolio.quantity), 2), 0)) - 1) * 100, 1) as decimal(5,1)
+                                round(((act_prices.close_price / nullif(round(sum(portfolio.quantity * portfolio.price) / sum(portfolio.quantity), 2), 0)) - 1) * 100, 1) as decimal(5,1)
                             ) as profit
-                    from 
-                        [reports].[dbo].[revolut_stocks] portfolio
-                    left join 
-                        [reports].[dbo].[revolut_stocks_prices] act_prices on portfolio.ticker = act_prices.ticker
-                    where 
-                        portfolio.price > 0
-                        and portfolio.type = 'buy - market'
-                    group by 
-                        portfolio.ticker, portfolio.currency, act_prices.timestamp, act_prices.close_price
-                    )                  
-                select 
-                      ticker, 
-                      currency,
-                      trades,     
-                      quantity, 
-                      actual_value,
-					  profit,
-                      avg_price, 
-                      wavg_price, 
-                      actual_price, 
-                      actual_price_date,
-                      act_prices_count
-                from rankedrows
-                where row_num = 1
-                --order by ticker asc, actual_price_date desc;
-                  order by num_actual_value desc;         
+                        from 
+                            [reports].[dbo].[revolut_stocks] portfolio
+                        left join 
+                            [reports].[dbo].[revolut_stocks_prices] act_prices on portfolio.ticker = act_prices.ticker
+                        where 
+                            portfolio.price > 0
+                            and portfolio.type = 'buy - market'
+                            --and year(portfolio.date) = '2024' -- Filtrování portfolia podle roku
+                        group by 
+                            portfolio.ticker, portfolio.currency, act_prices.timestamp, act_prices.close_price
+                    ),
+                    invest as (
+                        select 
+                            ticker, 
+                            currency,
+                            trades,     
+                            quantity, 
+                            num_quantity,
+                            actual_value,
+                            num_actual_value,
+                            profit,
+                            --avg_price, 
+                            wavg_price, 
+                            actual_price, 
+                            num_actual_price,
+                            actual_price_date,
+                            act_prices_count
+                        from rankedrows
+                        where row_num = 1
+                    ),
+                    dividends_filtered as (
+                        select 
+                            ticker,
+                            round(sum(amount), 2) as num_actual_dividend_value,
+                            format(round(sum(amount), 2), '0.###') as actual_dividend_value,
+                            count(amount) as payouts
+                        from [reports].[dbo].[revolut_stocks]
+                        where 
+                            type = 'DIVIDEND'
+                            --and year(date) = '2024' -- Filtrování dividend podle roku
+                        group by 
+                            ticker
+                    )
+                    select 
+                        invest.ticker, 
+                        invest.currency,
+                        invest.trades,     
+                        invest.quantity, 
+                        invest.actual_value,
+                        invest.profit,
+                        div.actual_dividend_value as dividend,
+                        format(round((div.num_actual_dividend_value / (invest.num_quantity * invest.num_actual_price))*100,2), '0.###') as DY,
+                        div.payouts,
+                        wavg_price, 
+                        invest.actual_price, 
+                        invest.actual_price_date,
+                        invest.act_prices_count
+                    from invest
+                    left join dividends_filtered as div on invest.ticker = div.ticker
+                    order by invest.num_actual_value desc;
+
             ''')
             columns = [column[0] for column in cursor.description]
             rows = cursor.fetchall()
@@ -91,59 +126,91 @@ class StockData(models.Model):
         print("--------------------------------TEST-def get_data_by_year - START-------------------------------------")
         with connection.cursor() as cursor:
                 sql = """
+                    -- Prehled portfolia = stock/trades/quantity/weighted price/actual price/PROFIT
                     with rankedrows as (
-                    select  
-                        row_number() over (partition by portfolio.ticker order by act_prices.timestamp desc) as row_num, 
-                        portfolio.date,
-                        portfolio.ticker,
-                        portfolio.currency,   
-                        count(portfolio.type) as trades,
-                        format(round(sum(portfolio.quantity), 2), '0.###') as quantity,
-                           
-                        format(round(sum(portfolio.quantity * act_prices.close_price), 2), '0.###') as actual_value, 
-                        round(sum(portfolio.quantity * act_prices.close_price), 2) as num_actual_value, 
-
-                        format(round(avg(portfolio.price), 2), '0.###') as avg_price, 
-                        format(round(sum(portfolio.quantity * portfolio.price) / sum(portfolio.quantity), 2), '0.###') as wavg_price, 
-                        format(act_prices.close_price, '0.0') as actual_price,		
-                        act_prices.timestamp as actual_price_date,
-                 		-- pocet zaznamu s cenami 
-                 		(select count(timestamp) from [reports].[dbo].[revolut_stocks_prices] where ticker = portfolio.ticker) as act_prices_count,
-                        
+                        select  
+                            row_number() over (partition by portfolio.ticker order by act_prices.timestamp desc) as row_num, 
+                            portfolio.ticker,
+                            portfolio.currency,   
+                            count(portfolio.date) as trades,
+                            format(round(sum(portfolio.quantity), 2), '0.###') as quantity,
+                            round(sum(portfolio.quantity), 2) as num_quantity,
+                            format(round(sum(portfolio.quantity * act_prices.close_price), 2), '0.###') as actual_value, 
+                            round(sum(portfolio.quantity * act_prices.close_price), 2) as num_actual_value, 
+                            format(round(avg(portfolio.price), 2), '0.###') as avg_price, 
+                            format(round(sum(portfolio.quantity * portfolio.price) / sum(portfolio.quantity), 2), '0.###') as wavg_price, 
+                            format(act_prices.close_price, '0.0') as actual_price,
+                            act_prices.close_price as num_actual_price,
+                            act_prices.timestamp as actual_price_date,
+                            -- pocet zaznamu s cenami 
+                            (select count(timestamp) from [reports].[dbo].[revolut_stocks_prices] where ticker = portfolio.ticker) as act_prices_count,
                             cast(
-                                  round(((act_prices.close_price / nullif(round(sum(portfolio.quantity * portfolio.price) / sum(portfolio.quantity), 2), 0)) - 1) * 100, 1) as decimal(5,1)
+                                round(((act_prices.close_price / nullif(round(sum(portfolio.quantity * portfolio.price) / sum(portfolio.quantity), 2), 0)) - 1) * 100, 1) as decimal(5,1)
                             ) as profit
-                    from 
-                        [reports].[dbo].[revolut_stocks] portfolio
-                    left join 
-                        [reports].[dbo].[revolut_stocks_prices] act_prices on portfolio.ticker = act_prices.ticker
-                    where 
-                        portfolio.price > 0
-                        and portfolio.type = 'buy - market'
-                        and year(portfolio.date) = %s
-                    group by 
-                        portfolio.date, portfolio.ticker, portfolio.currency, act_prices.timestamp, act_prices.close_price
-                    )                  
-                select 
-                      ticker, 
-                      currency,
-                      trades,     
-                      quantity, 
-                      actual_value,
-					  profit,
-                      avg_price, 
-                      wavg_price, 
-                      actual_price, 
-                      actual_price_date,
-                      act_prices_count
-                from rankedrows
-                where row_num = 1
-                  --order by ticker asc, actual_price_date desc;
-                  order by num_actual_value desc;  
-                    
+                        from 
+                            [reports].[dbo].[revolut_stocks] portfolio
+                        left join 
+                            [reports].[dbo].[revolut_stocks_prices] act_prices on portfolio.ticker = act_prices.ticker
+                        where 
+                            portfolio.price > 0
+                            and portfolio.type = 'buy - market'
+                            and year(portfolio.date) = %s -- Filtrování portfolia podle roku
+                        group by 
+                            portfolio.ticker, portfolio.currency, act_prices.timestamp, act_prices.close_price
+                    ),
+                    invest as (
+                        select 
+                            ticker, 
+                            currency,
+                            trades,     
+                            quantity, 
+                            num_quantity,
+                            actual_value,
+                            num_actual_value,
+                            profit,
+                            --avg_price, 
+                            wavg_price, 
+                            actual_price, 
+                            num_actual_price,
+                            actual_price_date,
+                            act_prices_count
+                        from rankedrows
+                        where row_num = 1
+                    ),
+                    dividends_filtered as (
+                        select 
+                            ticker,
+                            round(sum(amount), 2) as num_actual_dividend_value,
+                            format(round(sum(amount), 2), '0.###') as actual_dividend_value,
+                            count(amount) as payouts
+                        from [reports].[dbo].[revolut_stocks]
+                        where 
+                            type = 'DIVIDEND'
+                            and year(date) = %s -- Filtrování dividend podle roku
+                        group by 
+                            ticker
+                    )
+                    select 
+                        invest.ticker, 
+                        invest.currency,
+                        invest.trades,     
+                        invest.quantity, 
+                        invest.actual_value,
+                        invest.profit,
+                        div.actual_dividend_value as dividend,
+                        format(round((div.num_actual_dividend_value / (invest.num_quantity * invest.num_actual_price))*100,2), '0.###') as DY,
+                        div.payouts,
+                        wavg_price, 
+                        invest.actual_price, 
+                        invest.actual_price_date,
+                        invest.act_prices_count
+                    from invest
+                    left join dividends_filtered as div on invest.ticker = div.ticker
+                    order by invest.num_actual_value desc;
+
                 """
                 print(sql)
-                cursor.execute(sql, (year,))
+                cursor.execute(sql, (year,year))
                 #cursor.execute(sql, {'year': year})
                 #cursor.execute(sql)
                 columns = [column[0] for column in cursor.description]
