@@ -49,97 +49,48 @@
                     </tbody>
                 </table>
             </div>   
-        </div>
-       
+        </div>      
  <!-- GRAF --> 
         <div>
             <canvas id="myChart" style="padding-left: 20px; margin-left: auto; margin-right: auto;"></canvas> <!-- Canvas pro vykreslení grafu -->
         </div>
     </div> 
 
-        <script>
-            var canvas = document.getElementById('myChart');
-            // Nastavení šířky a výšky canvasu na 25% šířky a výšky okna
-            canvas.width = window.innerWidth * 0.15;
-            canvas.height = window.innerHeight * 0.15;
-            
-            
-            // Vložení JavaScriptu pro vykreslení grafu
-            var ctx = document.getElementById('myChart').getContext('2d'); // Získání kontextu canvasu
-            var data = JSON.parse('{{ chart_data|escapejs }}');
-  
-            // Zjistíme maximální hodnotu pro investice
-            var maxInvestice = Math.max(...data['data'].map(row => row[1]));
-
-            // Zjistíme maximální hodnotu pro dividendy
-            var maxDividendy = Math.max(...data['data'].map(row => row[2]));
-
-            // Nastavíme maximální hodnotu pro osu y pro dividendy na polovinu maximální hodnoty pro investice
-            var polovicniMaxDividendy = maxInvestice / 2;
-
-
-            // Vytvoření nové instance grafu
-            var myChart = new Chart(ctx, {
+    <script>
+        var canvas = document.getElementById('myChart');
+        // Nastavení šířky a výšky canvasu na 15% šířky a výšky okna
+        canvas.width = window.innerWidth * 0.15;
+        canvas.height = window.innerHeight * 0.15;
+        
+        // Vložení JavaScriptu pro vykreslení grafu
+        var ctx = document.getElementById('myChart').getContext('2d'); // Získání kontextu canvasu
+        var data = JSON.parse('{{ chart_data|escapejs }}');
+    
+        // Vytvoření nové instance grafu
+        var myChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: data['data'].map(function(row) {
-                    return row[0]; // Roky jako kategorie na ose x
-                }),
+                labels: data['data'].map(row => row[0]), // Roky jako kategorie na ose x
                 datasets: [{
                     label: 'Investice',
-                    data: data['data'].map(function(row) {
-                        return row[1]; // Data pro investice
-                    }),
+                    data: data['data'].map(row => row[1]), // Data pro investice
                     yAxisID: 'investice-y-axis', // Identifikátor osy y pro investice
                     backgroundColor: 'rgba(54, 162, 235, 0.5)', // Modrá barva pro investice
                     borderColor: 'rgba(54, 162, 235, 1)',
                     borderWidth: 1
                 }, {
                     label: 'Dividendy',
-                    data: data['data'].map(function(row) {
-                        return row[2]; // Data pro dividendy
-                    }),
+                    data: data['data'].map(row => row[2]), // Data pro dividendy
                     yAxisID: 'dividendy-y-axis', // Identifikátor osy y pro dividendy
                     backgroundColor: 'rgba(75, 192, 192, 0.5)', // Zelená barva pro dividendy
                     borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 1
                 }]
             },
-            options: {
-                scales: {
-                    xAxes: [{
-                        type: 'category', // Nastavení osy x jako kategorie
-                        labels: data['data'].map(function(row) {
-                            return row[0]; // Roky jako kategorie
-                        })
-                    }],
-                    yAxes: [{
-                        id: 'investice-y-axis',
-                        position: 'left', // Zobrazení osy y pro investice na levé straně grafu
-                        ticks: {
-                            beginAtZero: true,
-                            fontColor: 'white', // Barva popisků os y pro investice
-                            max: maxInvestice // Maximální hodnota pro osu y pro investice
-                        }
-                    }, {
-                        id: 'dividendy-y-axis',
-                        position: 'right', // Zobrazení osy y pro dividendy na pravé straně grafu
-                        ticks: {
-                            beginAtZero: true,
-                            fontColor: 'lightgreen', // Barva popisků os y pro dividendy
-                            // Nastavení maximální hodnoty na polovinu maximální hodnoty pro investice
-                            max: polovicniMaxDividendy
-                        }
-                    }]
-                },
-                legend: {
-                    labels: {
-                    fontColor: 'white' // Barva legendy
-                    }       
-                }
-            }
         });
-        </script>
+    </script>
+        
+
     </div>
 
  <!-- GRAF --> 
