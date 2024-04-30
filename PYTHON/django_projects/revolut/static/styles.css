@@ -74,3 +74,36 @@ a {
    margin-right: 20px;
 }
 
+/* Barva pozadí tlačítek */
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+   background-color: #cccccc !important;
+}
+
+/* Barva textu tlačítek */
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+   color: #333333 !important;
+}
+
+/* Barva pozadí tlačítka při najetí myší */
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+   background-color: #aaaaaa !important;
+}
+
+/* Barva pozadí aktivního tlačítka */
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+   background-color: #999999 !important;
+}
+
+/* Barva pozadí tlačítek řazení */
+.dataTables_wrapper .dataTables_wrapper .dataTables_sort_wrapper .sorting,
+.dataTables_wrapper .dataTables_wrapper .dataTables_sort_wrapper .sorting_asc,
+.dataTables_wrapper .dataTables_wrapper .dataTables_sort_wrapper .sorting_desc {
+   background-color: #cccccc !important;
+}
+
+/* Barva ikon tlačítek řazení */
+.dataTables_wrapper .dataTables_wrapper .dataTables_sort_wrapper .sorting:before,
+.dataTables_wrapper .dataTables_wrapper .dataTables_sort_wrapper .sorting_asc:before,
+.dataTables_wrapper .dataTables_wrapper .dataTables_sort_wrapper .sorting_desc:before {
+   color: #333333 !important;
+}

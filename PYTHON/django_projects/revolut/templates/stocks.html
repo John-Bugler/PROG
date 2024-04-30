@@ -1,4 +1,3 @@
-
 {% load static %}
 
 <!DOCTYPE html>
@@ -8,10 +7,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+   
     <title>Stocks data Visualization</title>
 </head>
 <body>
   
+    
+
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.6/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+
     <div class="container">
         <a href="http://localhost:8080/"><img src="{% static 'pic/Jete_sims.jpg' %}" alt="JeTe face" class="my-image"></a>
         <div class="content">
@@ -21,7 +27,7 @@
   
      
     <a href="http://ryzen5/Reports/report/Revolut_stocks_report/Revolut%20stocks">Stocks in SQL reporting services</a><br>
-    <table border="1">
+    <table id="stock-table" border="1">
         <thead>
             <tr>
                 {% for column in columns %}
@@ -35,17 +41,48 @@
                     {% for value in row %}
                         {% if forloop.counter == 6 %} {# sloupec profitu (počítáno od 1) - formatovani stylu#}
                             <td class="profit-cell" data-profit="{{ value }}">
-                            {{ value }}
+                                {% if value is None %}
+                                    0
+                                {% elif value|floatformat:"2" %}
+                                    {{ value|floatformat:2 }}
+                                {% else %}
+                                    {{ value }}
+                                {% endif %}
                             </td>
-                         {% else %}
-                            <td>{{ value }}</td>
+                        {% else %}
+                            <td>
+                                {% if value is None %}
+                                    0
+                                {% elif value|floatformat:"2" %}
+                                    {{ value|floatformat:2 }}
+                                {% else %}
+                                    {{ value }}
+                                {% endif %}
+                            </td>
                         {% endif %}
                     {% endfor %}
                 </tr>
             {% endfor %}
         </tbody>
+        
+        
+        
     </table>
 
+
+<script>
+    $(document).ready(function() { 
+        $('#stock-table').DataTable({
+            pageLength: 50 // Změňte tento počet na požadovanou hodnotu
+           
+            //dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
+           //     "<'row'<'col-sm-12'tr>>" +
+           //     "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            // Vlastní definice layoutu DataTables
+        });
+    });
+
+</script>
 
 </body>
 </html>

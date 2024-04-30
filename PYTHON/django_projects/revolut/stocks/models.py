@@ -37,14 +37,18 @@ class StockData(models.Model):
                             portfolio.ticker,
                             portfolio.currency,   
                             count(portfolio.date) as trades,
-                            format(round(sum(portfolio.quantity), 2), '0.###') as quantity,
+                            round(sum(portfolio.quantity), 2) as quantity,
                             round(sum(portfolio.quantity), 2) as num_quantity,
-                            format(round(sum(portfolio.quantity * act_prices.close_price), 2), '0.###') as actual_value, 
-                            round(sum(portfolio.quantity * act_prices.close_price), 2) as num_actual_value, 
-                            format(round(avg(portfolio.price), 2), '0.###') as avg_price, 
-                            format(round(sum(portfolio.quantity * portfolio.price) / sum(portfolio.quantity), 2), '0.###') as wavg_price, 
-                            format(act_prices.close_price, '0.0') as actual_price,
+                                
+                            round(sum(portfolio.quantity * act_prices.close_price), 2) as actual_value,
+
+                           
+                         
+                            round(avg(portfolio.price), 2) as avg_price, 
+                            round(sum(portfolio.quantity * portfolio.price) / sum(portfolio.quantity), 2) as wavg_price, 
+                            act_prices.close_price as actual_price,
                             act_prices.close_price as num_actual_price,
+                            
                             act_prices.timestamp as actual_price_date,
                             -- pocet zaznamu s cenami 
                             (select count(timestamp) from [reports].[dbo].[revolut_stocks_prices] where ticker = portfolio.ticker) as act_prices_count,
@@ -68,14 +72,12 @@ class StockData(models.Model):
                             currency,
                             trades,     
                             quantity, 
-                            num_quantity,
                             actual_value,
-                            num_actual_value,
                             profit,
                             --avg_price, 
                             wavg_price, 
                             actual_price, 
-                            num_actual_price,
+                            
                             actual_price_date,
                             act_prices_count
                         from rankedrows
@@ -85,7 +87,7 @@ class StockData(models.Model):
                         select 
                             ticker,
                             round(sum(amount), 2) as num_actual_dividend_value,
-                            format(round(sum(amount), 2), '0.###') as actual_dividend_value,
+                            round(sum(amount), 2) as actual_dividend_value,
                             count(amount) as payouts
                         from [reports].[dbo].[revolut_stocks]
                         where 
@@ -102,7 +104,7 @@ class StockData(models.Model):
                         invest.actual_value,
                         invest.profit,
                         div.actual_dividend_value as dividend,
-                        format(round((div.num_actual_dividend_value / (invest.num_quantity * invest.num_actual_price))*100,2), '0.###') as DY,
+                        round((div.actual_dividend_value / (invest.quantity * invest.actual_price))*100,2) as DY,
                         div.payouts,
                         wavg_price, 
                         invest.actual_price, 
@@ -110,7 +112,7 @@ class StockData(models.Model):
                         invest.act_prices_count
                     from invest
                     left join dividends_filtered as div on invest.ticker = div.ticker
-                    order by invest.num_actual_value desc;
+                    order by invest.actual_value desc;
 
             ''')
             columns = [column[0] for column in cursor.description]
