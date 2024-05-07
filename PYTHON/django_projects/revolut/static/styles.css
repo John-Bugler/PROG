@@ -68,6 +68,22 @@ a {
    align-items: center;
 }
 
+
+
+.iframe-container {
+   display: flex;
+}
+
+iframe {
+   flex: 1;
+   border: none; /* Odstranění ohraničení iframů */
+}
+
+
+
+
+
+
 .my-image {
    width: 5vh;
    height: auto;
