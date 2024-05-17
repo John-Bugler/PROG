@@ -18,7 +18,7 @@ setup(
     executables=[
         Executable(
             'work_monitor.py',
-            base=None,  # Pro konzolovou aplikaci ponechte hodnotu None
+            base="Win32GUI",  # Pro konzolovou aplikaci ponechte hodnotu = None / pro winGUI apku pouzijem hodnotu = "Win32GUI"  (jelikoz pouzivam tkinter)
            
         )
     ]
