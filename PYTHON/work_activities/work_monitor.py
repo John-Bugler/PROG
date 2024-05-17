@@ -8,7 +8,7 @@ class ActivityMonitor:
     def __init__(self, root):
         self.root = root
         self.root.title("Activity Monitor")
-        self.root.geometry("800x600")  # Nastavení výchozí velikosti okna
+        self.root.geometry("800x600")  
 
         self.activity_id = 1
         self.activities = []
@@ -20,21 +20,26 @@ class ActivityMonitor:
 
     def create_widgets(self):
         self.root.columnconfigure(0, weight=1)
-        self.root.columnconfigure(1, weight=4)  # upraveno pro větší šířku pole
+        self.root.columnconfigure(1, weight=4)  
+        self.root.rowconfigure(0, weight=0)
+        self.root.rowconfigure(1, weight=0)
+        self.root.rowconfigure(2, weight=0)
         self.root.rowconfigure(3, weight=1)
 
-        self.time_label = tk.Label(self.root, text="", font=("Helvetica", 16))
+        self.time_label = tk.Label(self.root, text="", font=("Calibri", 20, "bold"))
         self.time_label.grid(row=0, column=0, columnspan=2, sticky="ew", pady=5)
 
         self.activity_label = tk.Label(self.root, text="Činnost:")
-        self.activity_label.grid(row=1, column=0, sticky="w", padx=5, pady=5)  # Zarovnání vlevo
+        self.activity_label.grid(row=1, column=0, sticky="w", padx=5, pady=5)  
 
         self.activity_entry = tk.Entry(self.root)
-        self.activity_entry.grid(row=1, column=1, sticky="ew", padx=5, pady=5)  # Zarovnání textového pole vlevo
+        self.activity_entry.grid(row=1, column=1, sticky="ew", padx=5, pady=5)  
 
-                
-        self.start_stop_button = tk.Button(self.root, text="START", command=self.start_stop_activity, bg='green')
-        self.start_stop_button.grid(row=2, column=0, columnspan=2, pady=10)
+        self.start_stop_button = tk.Button(self.root, text="START", font=("Calibri", 20, "bold"), command=self.start_stop_activity, bg='light green')
+        self.start_stop_button.grid(row=2, column=1, columnspan=2, pady=10, sticky="ew")
+
+        self.duration_label = tk.Label(self.root, text="Průběh trvání: 00:00:00", font=("Calibri", 12, "bold"))
+        self.duration_label.grid(row=2, column=0, columnspan=1)
 
         self.activity_table = ttk.Treeview(self.root, columns=("ID", "Start", "Konec", "Trvání", "Činnost"), show="headings")
         self.activity_table.heading("ID", text="ID")
@@ -50,16 +55,14 @@ class ActivityMonitor:
         self.activity_table.grid(row=3, column=0, columnspan=2, sticky="nsew", padx=5, pady=5)
 
         self.style = ttk.Style()
-        self.style.configure("Treeview.Heading", font=("Helvetica", 10, "bold"))
-        self.style.configure("Treeview", grid=True)  # Zobrazení mřížky
+        self.style.configure("Treeview.Heading", font=("Calibri", 10, "bold"))
+        self.style.configure("Treeview", grid=True)  
 
         self.reset_button = tk.Button(self.root, text="RESET", command=self.reset_activities)
-        self.reset_button.grid(row=4, column=0, pady=10)
+        self.reset_button.grid(row=5, column=0, pady=10)
 
         self.export_button = tk.Button(self.root, text="EXPORT", command=self.export_to_db)
-        self.export_button.grid(row=4, column=1, pady=10)
-
-
+        self.export_button.grid(row=5, column=1, pady=10)
 
     def update_time(self):
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -84,6 +87,7 @@ class ActivityMonitor:
         self.current_activity = activity_name
         self.start_time = datetime.now()
         self.start_stop_button.config(text="STOP", bg='red')
+        self.update_duration()  
 
     def stop_activity(self):
         end_time = datetime.now()
@@ -96,7 +100,17 @@ class ActivityMonitor:
         self.activity_id += 1
         self.current_activity = None
         self.start_time = None
-        self.start_stop_button.config(text="START", bg='green')
+        self.start_stop_button.config(text="START", bg='light green')
+
+    def update_duration(self):
+        if self.current_activity is not None:
+            current_time = datetime.now()
+            duration = (current_time - self.start_time).total_seconds()
+            hours, remainder = divmod(duration, 3600)
+            minutes, seconds = divmod(remainder, 60)
+            duration_str = "{:02}:{:02}:{:02}".format(int(hours), int(minutes), int(seconds))
+            self.duration_label.config(text="Průběh trvání: " + duration_str)
+            self.root.after(1000, self.update_duration)
 
     def reset_activities(self):
         self.activities = []
@@ -104,10 +118,7 @@ class ActivityMonitor:
             self.activity_table.delete(i)
         self.activity_id = 1
 
-    # Metoda pro export zaznamenaných činností do databáze
     def export_to_db(self):
-        
-
         if not self.activities:
             messagebox.showinfo("Info", "Nejsou žádné záznamy k exportu.")
             return
@@ -116,28 +127,11 @@ class ActivityMonitor:
             server = 'localhost'
             database = 'reports'
             connection = pyodbc.connect(f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server};DATABASE={database};Trusted_Connection=yes')
-
             cursor = connection.cursor()
 
-
             for activity in self.activities:
-        
-                # Vypočítání trvání v hodinách s přesností na dvě desetinná místa
                 duration_hours = round((activity[2] - activity[1]).total_seconds() / 3600, 2)
-
-                # Převedení na řetězec s dvěma desetinnými místy
                 duration_str = "{:.2f}".format(duration_hours)
-
-
-
-                # Výpis hodnot před vložením do dotazu SQL
-                print("ID_activity:", activity[0])
-                print("start:", activity[1])
-                print("stop:", activity[2])
-                print("duration:", duration_str)
-                print("activity:", activity[4])
-
-
                 cursor.execute("""
                     INSERT INTO [reports].[dbo].[Work_Activities] (ID_activity, start, stop, duration, activity)
                     VALUES (?, ?, ?, ?, ?)
