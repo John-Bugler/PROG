@@ -1,3 +1,9 @@
+mit nainstalovany balicek pip install cx-Freeze
+v prostredi kde vytvarim exac
+
+check pip list
+
+
 vytvorit file setup.py = jak vypada setup.py je videt v adresari ....
 
 
@@ -6,13 +12,13 @@ import sys
 from cx_Freeze import setup, Executable
 
 # Seznam balíčků, které chceme zahrnout
-packages = ['pyodbc', 'yfinance', 'pandas', 'datetime']
+packages = ['pyodbc', 'tkinter', 'datetime']
 
 # Konfigurace setup.py
 setup(
-    name='stocks_data',
+    name='work_monitor',
     version='1.0',
-    description='Stocks data converter',
+    description='Work activities monitor',
     options={
         'build_exe': {
             'packages': packages,
@@ -21,12 +27,13 @@ setup(
     },
     executables=[
         Executable(
-            'stocks_data.py',
+            'work_monitor.py',
             base=None,  # Pro konzolovou aplikaci ponechte hodnotu None
            
         )
     ]
 )
+
 
 
 
@@ -36,4 +43,6 @@ setup(
 
 
 
-pousteni v kompilatoru v cmd = python setup.py build
+pousteni v cmd v adresari kde mam "program".py i setup.py  =  python setup.py build
+
+vysledny exac se da presouvat jen vcetne build adresare kde ma potrebne knihovny
