@@ -181,7 +181,9 @@ class ActivityMonitor:
             return
 
         desktop = os.path.join(os.path.join(os.environ['USERPROFILE']), 'OneDrive', 'Plocha')  # Upraveno pro OneDrive\Plocha
-        file_path = os.path.join(desktop, f"{posudek_number}_aktivity.xlsx")
+        #file_path = os.path.join(desktop, f"{posudek_number}_aktivity.xlsx")
+        now = datetime.now().strftime("%Y%m%d_%H%M")
+        file_path = os.path.join(desktop, f"{posudek_number}_{now}_aktivity.xlsx")  
 
         data = []
         for activity in self.activities:
