@@ -2,11 +2,11 @@ import sys
 from cx_Freeze import setup, Executable
 
 # Seznam balíčků, které chceme zahrnout
-packages = ['pyodbc', 'tkinter', 'datetime']
+packages = ['pyodbc', 'tkinter', 'datetime', 'os', 'pandas']
 
 # Konfigurace setup.py
 setup(
-    name='work_monitor',
+    name='work_monitor_v2',
     version='1.0',
     description='Work activities monitor',
     options={
@@ -17,7 +17,7 @@ setup(
     },
     executables=[
         Executable(
-            'work_monitor.py',
+            'work_monitor_v2.py',
             base="Win32GUI",  # Pro konzolovou aplikaci ponechte hodnotu = None / pro winGUI apku pouzijem hodnotu = "Win32GUI"  (jelikoz pouzivam tkinter)
            
         )
