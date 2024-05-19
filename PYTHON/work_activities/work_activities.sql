@@ -24,11 +24,12 @@ Create table Work_Activities
 ------------------------------------------------------TABLES------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
 
+
 select * from [reports].[dbo].[Work_Activities];
 
 
 
-
+/*SUMA PO POSUDCÍCH*/
 select c_ZP 
        ,(select max(stop) from [reports].[dbo].[Work_Activities] cin where pos.c_ZP = cin.c_ZP) as posudek_dokoncen
 	   ,count(id_activity) as pocet_cinnosti
@@ -39,13 +40,7 @@ group by c_ZP
 order by c_ZP desc;
 
 
-select * from [reports].[dbo].[Work_Activities]
-where c_ZP like '042819-2024'
-group by activity
-order by stop asc;
-
-
-
+/*ROZKLAD CINNOSTI ZADANEHO POSUDKU*/
 select 
     c_zp,
     activity as cinnost,
