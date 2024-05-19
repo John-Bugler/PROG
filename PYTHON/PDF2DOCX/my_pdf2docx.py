@@ -53,11 +53,12 @@ def convert_all_pdfs_in_folder(folder_path):
             docx_file = os.path.join(folder_path, filename.replace(".pdf", ".docx"))
             
             # Zavolejte funkci pro vytvoření DOCX s obsahem z PDF (lze zvolit jednu z funkcí)
-            # create_docx_with_pdf_content(pdf_file, docx_file)
-            insert_pdf_pages_as_images(pdf_file, docx_file)
+          
+            # create_docx_with_pdf_content(pdf_file, docx_file)   # Prevede PDF do DOCX jako text 
+            insert_pdf_pages_as_images(pdf_file, docx_file)  # Prevede PDF do DOCX jako obrazek/stranka
 
-# Nastavte cestu ke složce s PDF soubory
+# Cesta ke složce s PDF soubory
 folder_path = r"C:\Users\ijttr\OneDrive\Dokumenty\OCEŇOVÁNÍ\_IJK\042819-2024 - BD - Praha 3 - Vínohrady - Lucemburská 2014_26 - Unicont a MČP3\LV"
 
-# Zavolejte funkci pro konverzi všech PDF souborů ve složce
+# Funkce pro konverzi všech PDF souborů ve složce
 convert_all_pdfs_in_folder(folder_path)
