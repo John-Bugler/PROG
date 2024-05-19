@@ -1,9 +1,8 @@
+import os
 from docx import Document
-from docx.shared import Cm
+from docx.shared import Cm, Inches
 from pdf2docx import parse
-
 import fitz  # PyMuPDF
-from docx.shared import Inches
 
 # PDF jako text
 def create_docx_with_pdf_content(pdf_file, docx_file):  
@@ -46,14 +45,19 @@ def insert_pdf_pages_as_images(pdf_file, docx_file):
     # Uložení dokumentu DOCX
     doc.save(docx_file)
 
+def convert_all_pdfs_in_folder(folder_path):
+    # Procházení souborů ve složce
+    for filename in os.listdir(folder_path):
+        if filename.lower().endswith(".pdf"):
+            pdf_file = os.path.join(folder_path, filename)
+            docx_file = os.path.join(folder_path, filename.replace(".pdf", ".docx"))
+            
+            # Zavolejte funkci pro vytvoření DOCX s obsahem z PDF (lze zvolit jednu z funkcí)
+            # create_docx_with_pdf_content(pdf_file, docx_file)
+            insert_pdf_pages_as_images(pdf_file, docx_file)
 
+# Nastavte cestu ke složce s PDF soubory
+folder_path = r"C:\Users\ijttr\OneDrive\Dokumenty\OCEŇOVÁNÍ\_IJK\042819-2024 - BD - Praha 3 - Vínohrady - Lucemburská 2014_26 - Unicont a MČP3\LV"
 
-
-# Nastavte cestu k PDF a výstupnímu DOCX souboru
-pdf_file = r"C:\Users\ijttr\OneDrive\Dokumenty\OCEŇOVÁNÍ\_IJK\024270-2024 - ZSZ-IF-EQ Elipse as-251-BJ-Praha-8-Střížkov\Výpis z KN (k 31.12.2023).pdf"
-docx_file = r"C:\Users\ijttr\OneDrive\Dokumenty\OCEŇOVÁNÍ\_IJK\024270-2024 - ZSZ-IF-EQ Elipse as-251-BJ-Praha-8-Střížkov\pdf2.docx"
-
-# Zavolejte funkci pro vytvoření DOCX s obsahem z PDF
-#create_docx_with_pdf_content(pdf_file, docx_file)
-insert_pdf_pages_as_images(pdf_file, docx_file)
-
+# Zavolejte funkci pro konverzi všech PDF souborů ve složce
+convert_all_pdfs_in_folder(folder_path)
