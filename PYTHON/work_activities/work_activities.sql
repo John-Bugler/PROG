@@ -25,8 +25,9 @@ Create table Work_Activities
 ------------------------------------------------------------------------------------------------------------------------
 
 
-select * from [reports].[dbo].[Work_Activities];
-
+select * from [reports].[dbo].[Work_Activities]
+where c_zp like '042819-2024'
+order by start desc;
 
 
 /*SUMA PO POSUDCÍCH*/
@@ -40,11 +41,12 @@ group by c_ZP
 order by c_ZP desc;
 
 
-/*ROZKLAD CINNOSTI ZADANEHO POSUDKU*/
+/*ROZKLAD CINNOSTI (group po cinnostech) ZADANEHO POSUDKU*/
 select 
     c_zp,
     activity as cinnost,
-    min(stop) as dokonceni,
+    min(start) as zapoceti,
+	max(stop) as dokonceni,
     sum(duration) as trvani_cinnosti
 from 
     [reports].[dbo].[work_activities]
@@ -56,10 +58,29 @@ order by
     dokonceni asc;
 
 /*
+insert into [reports].[dbo].[work_activities]
+(timestamp, ID_activity, start, stop, duration, activity, c_ZP)
+values ('2024-05-27 15:25:09.045',1,'2024-05-27 11:15:48.650', '2024-05-27 15:05:02.066', 3.82, 'zpracovávání ZP - analytická èást', '042819-2024')
+
+insert into [reports].[dbo].[work_activities]
+(ID_activity, start, stop, duration, activity, c_ZP)
+values (1,'2024-05-24 10:00:00.000', '2024-05-24 12:05:08.054', 2.08, 'místní šetøení', '042819-2024')
+
+
+update  [reports].[dbo].[work_activities]
+set 
+timestamp = '2024-05-26 15:25:09.045',
+start = '2024-05-26 11:15:48.650',
+stop = '2024-05-26 15:05:02.066'
+where id = 8;
+
+
 update  [reports].[dbo].[work_activities]
 set activity = 'zpracovávání ZP - textová èást'
 where id = 3;
 
+delete from [reports].[dbo].[work_activities]
+where  id = 10;
 
 
 */
