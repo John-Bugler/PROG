@@ -229,6 +229,7 @@ class StockYearsOverview(models.Model):
     investment = models.DecimalField(max_digits=10, decimal_places=2)
     dividend = models.DecimalField(max_digits=10, decimal_places=2)
 
+
     class Meta:
         ordering = ['year']
 
@@ -267,3 +268,5 @@ class StockYearsOverview(models.Model):
             chart_data = df.to_json(orient='split')     
             print('chart data : ',chart_data)
         return columns, rows, chart_data
+
+

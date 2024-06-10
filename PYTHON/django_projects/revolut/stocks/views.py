@@ -19,9 +19,19 @@ from .models import StockData, StockYearsOverview
 def index(request) :
     print("--------------------------------TEST-def index-------------------------------------")
     columns, rows, chart_data = StockYearsOverview.get_data()
+    #last_data_actualization= tady dodelat datum posledni aktualizace DB
+    
     print("Columns:", columns)
     print("Rows:", rows)
-    context = {'columns': columns, 'rows': rows, 'chart_data': chart_data}
+    
+    context = {
+        'columns': columns, 
+        'rows': rows, 
+        'chart_data': chart_data,
+     
+     #   'last_data_actualization' : last_data_actualization
+
+    }
     return render(request, 'index.html', context)
 
 
