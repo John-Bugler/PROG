@@ -31,89 +31,162 @@ class StockData(models.Model):
         with connection.cursor() as cursor:
             cursor.execute('''
                     -- Prehled portfolia = stock/trades/quantity/weighted price/actual price/PROFIT
-                    with rankedrows as (
-                        select  
-                            row_number() over (partition by portfolio.ticker order by act_prices.timestamp desc) as row_num, 
-                            portfolio.ticker,
-                            portfolio.currency,   
-                            count(portfolio.date) as trades,
-                            round(sum(portfolio.quantity), 2) as quantity,
-                            round(sum(portfolio.quantity), 2) as num_quantity,
-                                
-                            round(sum(portfolio.quantity * act_prices.close_price), 2) as actual_value,
-
-                           
-                         
-                            round(avg(portfolio.price), 2) as avg_price, 
-                            round(sum(portfolio.quantity * portfolio.price) / sum(portfolio.quantity), 2) as wavg_price, 
-                            act_prices.close_price as actual_price,
-                            act_prices.close_price as num_actual_price,
-                            
-                            act_prices.timestamp as actual_price_date,
-                            -- pocet zaznamu s cenami 
-                            (select count(timestamp) from [reports].[dbo].[revolut_stocks_prices] where ticker = portfolio.ticker) as act_prices_count,
-                            cast(
-                                round(((act_prices.close_price / nullif(round(sum(portfolio.quantity * portfolio.price) / sum(portfolio.quantity), 2), 0)) - 1) * 100, 1) as decimal(5,1)
-                            ) as profit
-                        from 
-                            [reports].[dbo].[revolut_stocks] portfolio
-                        left join 
-                            [reports].[dbo].[revolut_stocks_prices] act_prices on portfolio.ticker = act_prices.ticker
-                        where 
-                            portfolio.price > 0
-                            and portfolio.type = 'buy - market'
-                            --and year(portfolio.date) = '2024' -- Filtrování portfolia podle roku
-                        group by 
-                            portfolio.ticker, portfolio.currency, act_prices.timestamp, act_prices.close_price
-                    ),
-                    invest as (
-                        select 
-                            ticker, 
-                            currency,
-                            trades,     
-                            quantity, 
-                            actual_value,
-                            profit,
-                            --avg_price, 
-                            wavg_price, 
-                            actual_price, 
-                            
-                            actual_price_date,
-                            act_prices_count
-                        from rankedrows
-                        where row_num = 1
-                    ),
-                    dividends_filtered as (
-                        select 
+                    with purchaseandsplits as (
+                        -- získání všech relevantních záznamů o nákupech, dividendách a splitech
+                        select
                             ticker,
-                            round(sum(amount), 2) as num_actual_dividend_value,
-                            round(sum(amount), 2) as actual_dividend_value,
-                            count(amount) as payouts
+                            currency,
+                            [date],
+                            type,
+                            quantity,
+                            price,
+                            amount,
+                            row_number() over (partition by ticker order by [date]) as rn
                         from [reports].[dbo].[revolut_stocks]
-                        where 
-                            type = 'DIVIDEND'
-                            --and year(date) = '2024' -- Filtrování dividend podle roku
-                        group by 
-                            ticker
-                    )
-                    select 
-                        invest.ticker, 
-                        invest.currency,
-                        invest.trades,     
-                        invest.quantity, 
-                        invest.actual_value,
-                        invest.profit,
-                        div.actual_dividend_value as dividend,
-                        round((div.actual_dividend_value / (invest.quantity * invest.actual_price))*100,2) as DY,
-                        div.payouts,
-                        wavg_price, 
-                        invest.actual_price, 
-                        invest.actual_price_date,
-                        invest.act_prices_count
-                    from invest
-                    left join dividends_filtered as div on invest.ticker = div.ticker
-                    order by invest.actual_value desc;
+                        where ticker <> ''
+                            and type in ('buy - market', 'stock split', 'dividend')
+                            and [date] between '2021-01-01' and getdate()
+                    ),
+                    lastsplitdates as (
+                        -- určení posledního data splitu pro každý ticker
+                        select
+                            ticker,
+                            max([date]) as last_split_date
+                        from purchaseandsplits
+                        where type = 'stock split'
+                        group by ticker
+                    ),
+                    cumulativequantities as (
+                        -- výpočet kumulativní quantity s ohledem na nákupy a split
+                        select
+                            ticker,
+                            sum(quantity) over (partition by ticker) as cumulative_quantity,
+                            row_number() over (partition by ticker order by (select null)) as rn
+                        from purchaseandsplits
+                        where type in ('buy - market', 'stock split')
+                    ),
+                    cumulativetrades as (
+                        -- výpočet kumulativního počtu provedených nákupů
+                        select
+                            ticker,
+                            count(*) over (partition by ticker) as cumulative_trades,
+                            row_number() over (partition by ticker order by (select null)) as rn
+                        from purchaseandsplits
+                        where type = 'buy - market'
+                    ),
+                    cumulativesplits as (
+                        -- výpočet kumulativní splity a q1 = kumulativní quantity pred poslednim splitem
+                        select
+                            ps.ticker,
+                            count(case when ps.type = 'stock split' then 1 end) as cumulative_splits,
+                            ls.last_split_date,
+                            sum(case 
+                                    when ps.[date] < ls.last_split_date then ps.quantity 
+                                    else 0 
+                                end) as q1,
+                            sum(case 
+                                    when ps.type = 'stock split' then ps.quantity 
+                                    else 0 
+                                end) as split_quantity,
+                            row_number() over (partition by ps.ticker order by (select null)) as rn
+                        from purchaseandsplits ps
+                        left join lastsplitdates ls on ps.ticker = ls.ticker
+                        group by ps.ticker, ls.last_split_date
+                    ),
+                    cumulativedividends as (
+                        -- výpočet kumulativní dividendy
+                        select
+                            ticker,
+                            sum(amount) over (partition by ticker) as cumulative_dividend,  
+                            row_number() over (partition by ticker order by (select null)) as rn
+                        from purchaseandsplits
+                        where type = 'dividend'
+                    ),
 
+                    cumulativeamounts as (
+                        -- výpočet kumulativních investic
+                        select
+                            ticker,
+                            sum(amount) over (partition by ticker) as cumulative_amount,  
+                            row_number() over (partition by ticker order by (select null)) as rn
+                        from purchaseandsplits
+                        where type = 'buy - market'
+                    ),
+
+                    cumulativefees as (
+                        -- výpočet kumulativních fee
+                        select
+                            ticker,
+                            sum(case 
+                                when amount - (quantity * price) < 0 or abs(amount - (quantity * price)) < 0.0001 then 0
+                                else amount - (quantity * price)
+                                end) over (partition by ticker order by date) as cumulative_fee,
+                            row_number() over (partition by ticker order by date desc) as rn
+                        from purchaseandsplits
+                        where type = 'buy - market'
+                    ),
+
+                    actualprices as (
+                        -- získání aktuálních cen
+                        select
+                            ticker,
+                            close_price,  
+                            timestamp,
+                            row_number() over (partition by ticker order by timestamp desc) as rn
+                        from [reports].[dbo].[revolut_stocks_prices]
+                    ),
+
+                    weightedaverageprice as (
+                        select
+                            ps.ticker,
+                            sum(ps.quantity * ps.price) as total_weighted_price,
+                            sum(ps.quantity) as total_quantity,
+                            row_number() over (partition by ps.ticker order by (select null)) as rn
+                        from [reports].[dbo].[revolut_stocks] ps -- purchaseandsplits ps
+                        where ps.type = 'buy - market'
+                        group by ps.ticker
+                    )
+
+                    select
+                        p.ticker,
+                        p.currency,
+                        t.cumulative_trades as trades,
+                        q.cumulative_quantity as quantity,
+
+                        a.cumulative_amount as cumulative_investment,
+                        a.cumulative_amount - f.cumulative_fee as cumulative_investment_nofee,
+
+                        f.cumulative_fee,
+                        q.cumulative_quantity * prs.close_price as actual_value,
+                        (q.cumulative_quantity * prs.close_price) - a.cumulative_amount as profit,
+                        (((q.cumulative_quantity * prs.close_price) - a.cumulative_amount) / a.cumulative_amount) * 100 as profit_percent,
+
+                        prs.timestamp as actual_price_date,
+                        prs.close_price as actual_price,
+                        w.total_weighted_price / nullif(w.total_quantity, 0) as average_purchase_price, -- výpočet průměrné nákupní ceny
+
+                        d.cumulative_dividend,
+
+                        s.cumulative_splits,
+                        s.last_split_date,
+                        s.q1 as quantity_before_last_split,
+                        s.split_quantity,
+                        (s.q1 + s.split_quantity) / nullif(s.q1, 0) as last_split_ratio
+
+
+                    from purchaseandsplits p
+                            left join cumulativequantities q on p.ticker = q.ticker and q.rn = 1
+                            left join cumulativetrades t on p.ticker = t.ticker and t.rn = 1
+                            left join cumulativesplits s on p.ticker = s.ticker and s.rn = 1
+                            left join cumulativedividends d on p.ticker = d.ticker and d.rn = 1
+                            left join actualprices prs on p.ticker = prs.ticker and prs.rn = 1
+                            left join cumulativeamounts a on p.ticker = a.ticker and a.rn = 1
+                            left join cumulativefees f on p.ticker = f.ticker and f.rn = 1
+                            left join weightedaverageprice w on p.ticker = w.ticker and w.rn = 1
+                    where 1=1 
+                        and p.rn = 1
+                    -- and p.ticker = 'nvda'
+                    order by ticker asc;
             ''')
             columns = [column[0] for column in cursor.description]
             rows = cursor.fetchall()
