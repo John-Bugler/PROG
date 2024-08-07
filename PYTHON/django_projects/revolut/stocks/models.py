@@ -187,7 +187,14 @@ class StockData(models.Model):
                             f.cumulative_fee,
                             q.cumulative_quantity * prs.close_price as actual_value,
                             (q.cumulative_quantity * prs.close_price) - (q.cumulative_quantity * (w.total_weighted_price / nullif(w.total_quantity, 0))) as profit,
-                            ((q.cumulative_quantity * prs.close_price) / (a.cumulative_amount - f.cumulative_fee)) * 100 as profit_percent,
+                            
+                            
+                            --(((q.cumulative_quantity * prs.close_price) + abs(ase.cumulative_amount) - (a.cumulative_amount - f.cumulative_fee)) / (a.cumulative_amount - f.cumulative_fee)) * 100  as profit_percent,
+                            
+                            (case when (q.cumulative_quantity * prs.close_price) > 0 then 
+                                (((q.cumulative_quantity * prs.close_price) - (q.cumulative_quantity * (w.total_weighted_price / nullif(w.total_quantity, 0))))/((q.cumulative_quantity * prs.close_price)-((q.cumulative_quantity * prs.close_price) - (q.cumulative_quantity * (w.total_weighted_price / nullif(w.total_quantity, 0)))))) * 100 
+                                else 0 
+                            end) as profit_percent,
 
                             prs.timestamp as actual_price_date,
                             prs.close_price as actual_price,
@@ -216,6 +223,7 @@ class StockData(models.Model):
                             and p.rn = 1
                         --and p.ticker = 'nvda'
                         order by ticker asc;
+
 
 
             ''')
