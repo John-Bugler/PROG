@@ -39,7 +39,7 @@
             {% for row in rows %}
                 <tr>
                     {% for value in row %}
-                        {% if forloop.counter == 10 %} {# sloupec profitu (počítáno od 1) - formatovani stylu#}
+                        {% if forloop.counter == 11 %} {# sloupec profitu (počítáno od 1) - formatovani stylu#}
                             <td class="profit-cell" data-profit="{{ value }}">
                                 {% if value is None %}
                                     0

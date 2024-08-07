@@ -38,14 +38,23 @@ class StockData(models.Model):
                             currency,
                             [date],
                             type,
-                            quantity,
+                            (case when type = 'buy - market' then quantity
+                                when type = 'sell - market' then -quantity
+                                when type = 'stock split' then quantity
+                                else 0
+                            end) as quantity,
+
                             price,
-                            amount,
+                            (case when type = 'buy - market' then amount
+                                when type = 'sell - market' then -amount
+                                else 0
+                            end) as amount,
                             row_number() over (partition by ticker order by [date]) as rn
                         from [reports].[dbo].[revolut_stocks]
                         where ticker <> ''
-                            and type in ('buy - market', 'stock split', 'dividend')
-                            and [date] between '2021-01-01' and getdate()
+                            and type in ('buy - market', 'sell - market', 'stock split', 'dividend')
+                            --and year([date]) = '2024'
+                            and [date] between '2021-01-01' and getdate()  -- za cele obdobi po soucasnost
                     ),
                     lastsplitdates as (
                         -- určení posledního data splitu pro každý ticker
@@ -56,6 +65,7 @@ class StockData(models.Model):
                         where type = 'stock split'
                         group by ticker
                     ),
+
                     cumulativequantities as (
                         -- výpočet kumulativní quantity s ohledem na nákupy a split
                         select
@@ -63,8 +73,9 @@ class StockData(models.Model):
                             sum(quantity) over (partition by ticker) as cumulative_quantity,
                             row_number() over (partition by ticker order by (select null)) as rn
                         from purchaseandsplits
-                        where type in ('buy - market', 'stock split')
+                        where type in ('buy - market', 'sell - market', 'stock split')
                     ),
+
                     cumulativetrades as (
                         -- výpočet kumulativního počtu provedených nákupů
                         select
@@ -74,6 +85,8 @@ class StockData(models.Model):
                         from purchaseandsplits
                         where type = 'buy - market'
                     ),
+
+
                     cumulativesplits as (
                         -- výpočet kumulativní splity a q1 = kumulativní quantity pred poslednim splitem
                         select
@@ -103,7 +116,7 @@ class StockData(models.Model):
                         where type = 'dividend'
                     ),
 
-                    cumulativeamounts as (
+                    cumulativeamounts_buy as (
                         -- výpočet kumulativních investic
                         select
                             ticker,
@@ -111,6 +124,16 @@ class StockData(models.Model):
                             row_number() over (partition by ticker order by (select null)) as rn
                         from purchaseandsplits
                         where type = 'buy - market'
+                    ),
+
+                    cumulativeamounts_sell as (
+                        -- výpočet kumulativních investic
+                        select
+                            ticker,
+                            sum(amount) over (partition by ticker) as cumulative_amount,  
+                            row_number() over (partition by ticker order by (select null)) as rn
+                        from purchaseandsplits
+                        where type = 'sell - market'
                     ),
 
                     cumulativefees as (
@@ -123,7 +146,7 @@ class StockData(models.Model):
                                 end) over (partition by ticker order by date) as cumulative_fee,
                             row_number() over (partition by ticker order by date desc) as rn
                         from purchaseandsplits
-                        where type = 'buy - market'
+                        where type = 'buy - market' or type = 'sell - market'
                     ),
 
                     actualprices as (
@@ -142,7 +165,7 @@ class StockData(models.Model):
                             sum(ps.quantity * ps.price) as total_weighted_price,
                             sum(ps.quantity) as total_quantity,
                             row_number() over (partition by ps.ticker order by (select null)) as rn
-                        from [reports].[dbo].[revolut_stocks] ps -- purchaseandsplits ps
+                        from purchaseandsplits ps
                         where ps.type = 'buy - market'
                         group by ps.ticker
                     )
@@ -150,11 +173,15 @@ class StockData(models.Model):
                     select
                         p.ticker,
                         p.currency,
-                        t.cumulative_trades as trades,
+                        (case when t.cumulative_trades is not NULL then t.cumulative_trades
+                            else 0
+                        end) as trades,
+                        
                         q.cumulative_quantity as quantity,
 
                         a.cumulative_amount as cumulative_investment,
                         a.cumulative_amount - f.cumulative_fee as cumulative_investment_nofee,
+                                ase.cumulative_amount as cumulative_sell,
 
                         f.cumulative_fee,
                         q.cumulative_quantity * prs.close_price as actual_value,
@@ -180,13 +207,15 @@ class StockData(models.Model):
                             left join cumulativesplits s on p.ticker = s.ticker and s.rn = 1
                             left join cumulativedividends d on p.ticker = d.ticker and d.rn = 1
                             left join actualprices prs on p.ticker = prs.ticker and prs.rn = 1
-                            left join cumulativeamounts a on p.ticker = a.ticker and a.rn = 1
+                            left join cumulativeamounts_buy a on p.ticker = a.ticker and a.rn = 1
+                            left join cumulativeamounts_sell ase on p.ticker = ase.ticker and ase.rn = 1
                             left join cumulativefees f on p.ticker = f.ticker and f.rn = 1
                             left join weightedaverageprice w on p.ticker = w.ticker and w.rn = 1
                     where 1=1 
                         and p.rn = 1
-                    -- and p.ticker = 'nvda'
+                    --and p.ticker = 'nvda'
                     order by ticker asc;
+
             ''')
             columns = [column[0] for column in cursor.description]
             rows = cursor.fetchall()
