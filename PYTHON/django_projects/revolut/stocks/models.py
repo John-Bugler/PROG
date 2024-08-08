@@ -280,7 +280,7 @@ class StockData(models.Model):
                             quantity, 
                             num_quantity,
                             actual_value,
-                            num_actual_value,
+                            num_actual_value,p
                             profit,
                             --avg_price, 
                             wavg_price, 
