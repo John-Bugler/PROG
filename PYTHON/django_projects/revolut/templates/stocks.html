@@ -49,6 +49,14 @@
                                     {{ value }}
                                 {% endif %}
                             </td>
+                        {% elif forloop.counter == 4 %} {# čtvrtý sloupec - speciální podmínka pro hodnotu 0 #}
+                            <td>
+                                {% if value == 0 %}
+                                    {# nechat buňku prázdnou #}
+                                {% else %}
+                                    {{ value }}
+                                {% endif %}
+                            </td>
                         {% else %}
                             <td>
                                 {% if value is None %}
@@ -64,6 +72,7 @@
                 </tr>
             {% endfor %}
         </tbody>
+        
         
         
         
