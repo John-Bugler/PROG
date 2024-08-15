@@ -310,7 +310,7 @@ class StockData(models.Model):
                         invest.trades,     
                         invest.quantity, 
                         invest.actual_value,
-                        invest.profit,
+                        round(invest.profit, 2),
                         div.actual_dividend_value as dividend,
                         format(round((div.num_actual_dividend_value / (invest.num_quantity * invest.num_actual_price))*100,2), '0.###') as DY,
                         div.payouts,

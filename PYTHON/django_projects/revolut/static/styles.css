@@ -39,20 +39,23 @@ tr:hover {
    background-color: #555;
 }
 
+
 td[data-profit*="-"] {
    /* styl pro záporné hodnoty */
    color: red;
 }
 
-td[data-profit="None"] {
-   /* styl pro hodnoty None */
-   color: rgb(253, 252, 252);
+td[data-profit="0.00"] {
+   color: rgb(143, 141, 141) !important; /* Šedá pro hodnotu 0.00 */
 }
 
-td[data-profit]:not([data-profit*="-"]):not([data-profit="None"]) {
+
+td[data-profit]:not([data-profit*="-"]) :not([data-profit="0.00"]) {
    /* styl pro kladné hodnoty */
    color: rgb(25, 250, 25);
 }
+
+
 
 a {
    color: #f59259; /* barva textu */
