@@ -338,7 +338,8 @@ class StockData(models.Model):
 #Prehled investic a dividend po letech
 class StockYearsOverview(models.Model):
     year = models.DateTimeField()
-    investment = models.DecimalField(max_digits=10, decimal_places=2)
+    buy = models.DecimalField(max_digits=10, decimal_places=2)
+    sell = models.DecimalField(max_digits=10, decimal_places=2)
     dividend = models.DecimalField(max_digits=10, decimal_places=2)
 
 
@@ -358,8 +359,14 @@ class StockYearsOverview(models.Model):
                         select round(sum(amount), 2)
                         from [reports].[dbo].[revolut_stocks] sub
                         where sub.type = 'buy - market' and year(sub.date) = year(r.date)
-                    ) as '$investment',
-                    
+                    ) as '$buy',
+
+                    (
+                        select round(sum(amount), 2)
+                        from [reports].[dbo].[revolut_stocks] sub
+                        where sub.type = 'sell - market' and year(sub.date) = year(r.date)
+                    ) as '$sell',                             
+
                     (
                         select round(sum(amount), 2)
                         from [reports].[dbo].[revolut_stocks] sub

@@ -37,41 +37,37 @@
         </thead>
         <tbody>
             {% for row in rows %}
-                <tr>
-                    {% for value in row %}
-                        {% if forloop.counter == 11 %} {# sloupec profitu (počítáno od 1) - formatovani stylu#}
-                            <td class="profit-cell" data-profit="{{ value }}">
-                                {% if value is None %}
-                                    0
-                                {% elif value|floatformat:"2" %}
-                                    {{ value|floatformat:2 }}
-                                {% else %}
-                                    {{ value }}
-                                {% endif %}
-                            </td>
-                        {% elif forloop.counter == 4 %} {# čtvrtý sloupec - speciální podmínka pro hodnotu 0 #}
-                            <td>
-                                {% if value == 0 %}
-                                    {# nechat buňku prázdnou #}
-                                {% else %}
-                                    {{ value }}
-                                {% endif %}
-                            </td>
-                        {% else %}
-                            <td>
-                                {% if value is None %}
-                                    0
-                                {% elif value|floatformat:"2" %}
-                                    {{ value|floatformat:2 }}
-                                {% else %}
-                                    {{ value }}
-                                {% endif %}
-                            </td>
-                        {% endif %}
-                    {% endfor %}
-                </tr>
+                {# Zkontroluj hodnotu ve čtvrtém sloupci #}
+                {% if row.3 > 0 %}
+                    <tr>
+                        {% for value in row %}
+                            {% if forloop.counter == 11 %} {# sloupec profitu (počítáno od 1) - formatovani stylu#}
+                                <td class="profit-cell" data-profit="{{ value }}">
+                                    {% if value is None %}
+                                        0
+                                    {% elif value|floatformat:"2" %}
+                                        {{ value|floatformat:2 }}
+                                    {% else %}
+                                        {{ value }}
+                                    {% endif %}
+                                </td>
+                            {% else %}
+                                <td>
+                                    {% if value is None %}
+                                        0
+                                    {% elif value|floatformat:"2" %}
+                                        {{ value|floatformat:2 }}
+                                    {% else %}
+                                        {{ value }}
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endif %}
             {% endfor %}
         </tbody>
+        
         
         
         
