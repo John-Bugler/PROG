@@ -50,7 +50,8 @@ td[data-profit="0.00"] {
 }
 
 
-td[data-profit]:not([data-profit*="-"]) :not([data-profit="0.00"]) {
+td[data-profit]:not([data-profit*="-"]):not([data-profit="None"]) {
+/*td[data-profit]:not([data-profit*="-"]) :not([data-profit="0.00"]) {
    /* styl pro kladné hodnoty */
    color: rgb(25, 250, 25);
 }
