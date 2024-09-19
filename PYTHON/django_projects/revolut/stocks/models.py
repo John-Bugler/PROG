@@ -46,6 +46,8 @@ class StockData(models.Model):
                                         price,
                                         (case when type = 'buy - market' then amount
                                             when type = 'sell - market' then -amount
+                                            when type = 'dividend' then amount
+
                                             else 0
                                         end) as amount,
                                         row_number() over (partition by ticker order by [date]) as rn
@@ -237,7 +239,6 @@ class StockData(models.Model):
                                     and p.rn = 1
                                 --and p.ticker = 'nvda'
                                 order by ticker asc;
-
 
 
             ''')
