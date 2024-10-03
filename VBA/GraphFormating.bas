@@ -1,6 +1,10 @@
 Attribute VB_Name = "GraphFormating"
 Sub ChartNormalize()
+
+    Dim ws As Worksheet
+       
     Dim chrt As Chart
+
     Dim srs As Series
     Dim trendlineExists As Boolean
     
@@ -30,13 +34,28 @@ Sub ChartNormalize()
     Application.Calculation = xlCalculationManual
 
 
+    ' Odkaz na aktivní list
+    Set ws = ActiveSheet
+
+    ' Zkontrolujte, zda na listu existují grafy
+    
+    Debug.Print "Poèet ChartObjects na aktivnim listu = "; ws.ChartObjects.Count
+    If ws.ChartObjects.Count = 0 Then
+        MsgBox "No charts available on this sheet."
+        Exit Sub
+    End If
+
+
     On Error Resume Next
-    Set chrt = ActiveChart ' vybrany / aktivni graf do variablu
+    Set chrt = ActiveChart
 
     If chrt Is Nothing Then
         MsgBox "Please select a chart first."
         Exit Sub
     End If
+
+    
+  chrt.Parent.Placement = xlFreeFloating ' Použití Parent pro získání ChartObject
 
      'aplikovani sablony na graf - KDYZ JE SABLONA SPATNA TAK PADA EXCEL
     'chrt.ApplyChartTemplate ( _
@@ -50,6 +69,9 @@ Sub ChartNormalize()
     y = 210
     n = 0  'nulovani posunu vzorce trendline
     
+
+    ' nastaveni plovouciho okna grafu, bez vlivu zmen velikosti radku a sloupcu na velikost grafu
+
 
     'velikost hlavniho okna grafu
     chrt.Parent.Width = x
@@ -75,8 +97,9 @@ Sub ChartNormalize()
     msg = "Chart Data Source Information:" & vbCrLf & vbCrLf
    
 
-    ' Loop through each series in the chart
+    ' Loop pres vsechny øady grafu
     For Each srs In chrt.SeriesCollection
+        msg = msg & "Graph Name: " & chrt.Name & vbCrLf
         msg = msg & "Series Name: " & srs.Name & vbCrLf
 
         ' ziskani vzorce rady - poloha rady
@@ -133,7 +156,7 @@ Sub ChartNormalize()
         End With
         
     
-       'obarveni budu v grafu podle podmineneho formatovani ve sloupci tabulky y souradnice (dat y souradnice)
+       'obarveni bodu v grafu podle podmineneho formatovani ve sloupci tabulky y souradnice (dat y souradnice)
         Dim s As Series
         Dim i As Integer
            
@@ -144,37 +167,88 @@ Sub ChartNormalize()
         Next i
 
 
-'       ' smaze vsechny pripadne trendlines
-'        With srs.Trendlines
-'           For i = .Count To 1 Step -1
-'              .Item(i).Delete
-'           Next i
-'        End With
-'
-'
-'       ' Pokud trendline neexistuje, pøidáme novou
-'        chrt.FullSeriesCollection(srs.Name).Trendlines.Add
-'
-'        chrt.FullSeriesCollection(srs.Name).Trendlines(1).Select
-'        Selection.Forward = 0
-'        Selection.Backward = 0
-'        With Selection.Format.Line
-'            .Visible = msoTrue
-'            .DashStyle = msoLineDash
-'            .ForeColor.RGB = RGB(255, 0, 0)
-'            .Transparency = 0
-'            .Weight = 2#
-'        End With
-'        Selection.Format.Line.EndArrowheadStyle = msoArrowheadTriangle
+       ' smaze vsechny pripadne trendlines
+        With srs.Trendlines
+           For i = .Count To 1 Step -1
+              .Item(i).Delete
+           Next i
+        End With
 
-        
+
+       ' pøidáme novou trendline - LINEAR
+        chrt.FullSeriesCollection(srs.Name).Trendlines.Add
+       
+       ' nastavení trend line - LINEAR
+        chrt.FullSeriesCollection(srs.Name).Trendlines(1).Select
+        Selection.Type = xlLinear
+        Selection.Forward = 0
+        Selection.Backward = 0
+        With Selection.Format.Line
+            .Visible = msoTrue
+            .DashStyle = msoLineDash
+            .ForeColor.RGB = RGB(0, 0, 0)
+            .Transparency = 0
+            .Weight = 1
+        End With
+        Selection.Format.Line.EndArrowheadStyle = msoArrowheadTriangle
+
      
         'vzorce trendline a poloha vzorce trend-line
         chrt.FullSeriesCollection(srs.Name).Trendlines(1).DisplayEquation = True
         chrt.FullSeriesCollection(srs.Name).Trendlines(1).DisplayRSquared = True
         chrt.FullSeriesCollection(srs.Name).Trendlines(1).DataLabel.Left = x * 0.7
         chrt.FullSeriesCollection(srs.Name).Trendlines(1).DataLabel.Top = y * 0.1 + n
+        
+        
+        
+        ' nastavení barvy textu rovnice trend line
+        Dim totalChars As Long
+        
+        ' Získání celkového poètu znakù rovnice trendové èáry
+        totalChars = chrt.FullSeriesCollection(srs.Name).Trendlines(1).DataLabel.Format.TextFrame2.TextRange.Characters.Count
+        
+        ' Zmìna barvy textu celé rovnice (od 1. znaku až po poslední znak)
+        chrt.FullSeriesCollection(srs.Name).Trendlines(1).DataLabel.Format.TextFrame2.TextRange.Characters(1, totalChars).Font.Fill.ForeColor.RGB = RGB(0, 0, 0)
         n = n + 30 ' posun dolu pro rovnici dalsi rady
+       
+       
+      
+       
+       
+       
+       ' pøidáme novou trendline - LOGARITHMIC
+        chrt.FullSeriesCollection(srs.Name).Trendlines.Add
+       
+       ' nastavení trend line - LOGARITHMIC
+        chrt.FullSeriesCollection(srs.Name).Trendlines(2).Select
+        Selection.Type = xlLogarithmic
+        Selection.Forward = 0
+        Selection.Backward = 0
+        With Selection.Format.Line
+            .Visible = msoTrue
+            .DashStyle = msoLineDash
+            .ForeColor.RGB = RGB(255, 0, 0)
+            .Transparency = 0
+            .Weight = 1
+        End With
+        Selection.Format.Line.EndArrowheadStyle = msoArrowheadTriangle
+    
+        'vzorce trendline a poloha vzorce trend-line
+        chrt.FullSeriesCollection(srs.Name).Trendlines(2).DisplayEquation = True
+        chrt.FullSeriesCollection(srs.Name).Trendlines(2).DisplayRSquared = True
+        chrt.FullSeriesCollection(srs.Name).Trendlines(2).DataLabel.Left = x * 0.7
+        chrt.FullSeriesCollection(srs.Name).Trendlines(2).DataLabel.Top = y * 0.1 + n
+              
+        ' nastavení barvy textu rovnice trend line
+         
+        ' Získání celkového poètu znakù rovnice trendové èáry
+        totalChars = chrt.FullSeriesCollection(srs.Name).Trendlines(2).DataLabel.Format.TextFrame2.TextRange.Characters.Count
+        
+        ' Zmìna barvy textu celé rovnice (od 1. znaku až po poslední znak)
+        chrt.FullSeriesCollection(srs.Name).Trendlines(2).DataLabel.Format.TextFrame2.TextRange.Characters(1, totalChars).Font.Fill.ForeColor.RGB = RGB(255, 0, 0)
+        n = n + 30 ' posun dolu pro rovnici dalsi rady
+              
+
 
   
 
@@ -204,11 +278,21 @@ Sub ChartNormalize()
        With chrt.Axes(xlValue)
            .MinimumScale = Application.WorksheetFunction.RoundDown(minY - bufferY, -3) ' -3 je zaokrouhlení na tisíce, klasika
            .MaximumScale = Application.WorksheetFunction.RoundUp(maxY + bufferY, -3)
+       
+
+          ' Nastavení x-ových grid lines
+           .MajorGridlines.Format.Line.Visible = msoTrue
+           .MajorGridlines.Format.Line.DashStyle = msoLineSysDot
+           .MajorGridlines.Format.Line.Weight = 0.1
+               
+       
        End With
 
        ' Primární hlavní vodorovná møížka
        ' chrt.SetElement (msoElementPrimaryValueGridLinesMajor)
 
+
+   
 
 
     Next srs

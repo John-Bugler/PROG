@@ -1,7 +1,7 @@
 Attribute VB_Name = "Data"
+' globalni promene
+
 Dim tblData_All As ListObject
-
-
 
 Sub NacteniDatValuo()
     ' Promìnné
@@ -16,6 +16,7 @@ Sub NacteniDatValuo()
     Dim NextRow As Long
     Dim wb As Workbook
     Dim sheetName As String
+    
     Dim timestamp As String
     
     ' Nastavit aktuální sešit jako cílový sešit
@@ -116,13 +117,42 @@ Sub NacteniDatValuo()
 
     ' Kopírování hlavní tabulky data_all na novou a extrakce záznamù dle parametrù
     ' název nové tabulky + timestamp, list zdrojové tabulky, promìnná typu object zdrojové tabulky, název sloupce pro úpravu záznamù, záznam který chci ponmechat
-    Call CopyAndModifyTable("data_byty_" & timestamp, "data_byty", tblData_All, "Typ", "byt")
-    Call CopyAndModifyTable("data_rd_" & timestamp, "data_rd", tblData_All, "Typ", "rodinný dùm")
-    'Call CopyAndModifyTable("data_garáže_" & TimeStamp, "data_garáže", tblData_All, "Typ", "garáž")
     
-    Call CopyAndModifyTable("data_pozemky_" & timestamp, "data_pozemky", tblData_All, "Nemovitost", "parcela")
- 
+     
+     
+     Dim pokracovat As VbMsgBoxResult
+   
+    ' Dotaz na uživatele, zda chce spustit další proceduru
+     pokracovat = MsgBox("Chcete pøidat list jen s byty?", vbYesNo + vbQuestion, "Potvrzení")
+
+     If pokracovat = vbYes Then
+        Call CopyAndModifyTable("data_byty_", timestamp, "data_byty", tblData_All, "Typ", "byt")
+     End If
+  
+
+     ' Dotaz na uživatele, zda chce spustit další proceduru
+     pokracovat = MsgBox("Chcete pøidat list jen s rodinnými domy?", vbYesNo + vbQuestion, "Potvrzení")
+   
+     If pokracovat = vbYes Then
+        Call CopyAndModifyTable("data_rd_", timestamp, "data_rd", tblData_All, "Typ", "rodinný dùm")
+     End If
+     
+     
+     ' Dotaz na uživatele, zda chce spustit další proceduru
+     pokracovat = MsgBox("Chcete pøidat list jen s pozemky?", vbYesNo + vbQuestion, "Potvrzení")
+     
+     If pokracovat = vbYes Then
+        Call CopyAndModifyTable("data_pozemky_", timestamp, "data_pozemky", tblData_All, "Nemovitost", "parcela")
+     End If
     
+     ' Dotaz na uživatele, zda chce spustit další proceduru
+     pokracovat = MsgBox("Chcete pøidat list jen s garážemi?", vbYesNo + vbQuestion, "Potvrzení")
+     
+     If pokracovat = vbYes Then
+        Call CopyAndModifyTable("data_garaze_", timestamp, "data_garaze", tblData_All, "Typ", "garáž")
+     End If
+        
+
     
 End Sub
 
@@ -398,13 +428,14 @@ Sub FormatTable(sheetName As String, tableName As String)
 End Sub
 
 
-Sub CopyAndModifyTable(newSheetName As String, newTableName As String, sourceTable As ListObject, columnToFilter As String, valueToKeep As Variant)
+Public Sub CopyAndModifyTable(newSheetName As String, timestamp As String, newTableName As String, sourceTable As ListObject, columnToFilter As String, valueToKeep As Variant)
     Dim wsSource As Worksheet
     Dim wsNew As Worksheet
     Dim tblNew As ListObject
     Dim columnIndex As Long
     Dim lastRow As Long
     Dim i As Long
+
     
     Dim noveSloupce As Variant
     Dim pozice As Integer
@@ -416,7 +447,7 @@ Sub CopyAndModifyTable(newSheetName As String, newTableName As String, sourceTab
     
     ' Vytvoøení nového listu
     Set wsNew = ActiveWorkbook.Sheets.Add(After:=ActiveWorkbook.Sheets(ActiveWorkbook.Sheets.Count))
-    wsNew.Name = newSheetName
+    wsNew.Name = newSheetName + timestamp
     
     ' Zkopírování tabulky na nový list
     sourceTable.Range.Copy Destination:=wsNew.Range("A1")
@@ -521,6 +552,14 @@ Sub BodovyGraf(xSloupecNázev As String, ySloupecNázev As String)
     With graf.Chart
         ' Nastavení typu grafu na bodový (scatter)
         .ChartType = xlXYScatter
+        
+        ' Nastavení x-ových grid lines
+        .Axes(xlValue).MajorGridlines.Format.Line.Visible = msoTrue
+        .Axes(xlValue).MajorGridlines.Format.Line.DashStyle = msoLineSysDot
+        .Axes(xlValue).MajorGridlines.Format.Line.Weight = 0.5
+        
+   
+        
         
         ' Odebrat všechny existující øady (pro jistotu)
         Do While .SeriesCollection.Count > 0
