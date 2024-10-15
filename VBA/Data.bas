@@ -115,43 +115,45 @@ Sub NacteniDatValuo()
     ' Vizuální formátování tabulky
     Call FormatTable(sheetName, tblData_All.Name)
 
+    
+    
     ' Kopírování hlavní tabulky data_all na novou a extrakce záznamù dle parametrù
     ' název nové tabulky + timestamp, list zdrojové tabulky, promìnná typu object zdrojové tabulky, název sloupce pro úpravu záznamù, záznam který chci ponmechat
     
      
      
-     Dim pokracovat As VbMsgBoxResult
-   
-    ' Dotaz na uživatele, zda chce spustit další proceduru
-     pokracovat = MsgBox("Chcete pøidat list jen s byty?", vbYesNo + vbQuestion, "Potvrzení")
-
-     If pokracovat = vbYes Then
-        Call CopyAndModifyTable("data_byty_", timestamp, "data_byty", tblData_All, "Typ", "byt")
-     End If
-  
-
-     ' Dotaz na uživatele, zda chce spustit další proceduru
-     pokracovat = MsgBox("Chcete pøidat list jen s rodinnými domy?", vbYesNo + vbQuestion, "Potvrzení")
-   
-     If pokracovat = vbYes Then
-        Call CopyAndModifyTable("data_rd_", timestamp, "data_rd", tblData_All, "Typ", "rodinný dùm")
-     End If
-     
-     
-     ' Dotaz na uživatele, zda chce spustit další proceduru
-     pokracovat = MsgBox("Chcete pøidat list jen s pozemky?", vbYesNo + vbQuestion, "Potvrzení")
-     
-     If pokracovat = vbYes Then
-        Call CopyAndModifyTable("data_pozemky_", timestamp, "data_pozemky", tblData_All, "Nemovitost", "parcela")
-     End If
-    
-     ' Dotaz na uživatele, zda chce spustit další proceduru
-     pokracovat = MsgBox("Chcete pøidat list jen s garážemi?", vbYesNo + vbQuestion, "Potvrzení")
-     
-     If pokracovat = vbYes Then
-        Call CopyAndModifyTable("data_garaze_", timestamp, "data_garaze", tblData_All, "Typ", "garáž")
-     End If
-        
+'     Dim pokracovat As VbMsgBoxResult
+'
+'    ' Dotaz na uživatele, zda chce spustit další proceduru
+'     pokracovat = MsgBox("Chcete pøidat list jen s byty?", vbYesNo + vbQuestion, "Potvrzení")
+'
+'     If pokracovat = vbYes Then
+'        Call CopyAndModifyTable("data_byty_", timestamp, "data_byty", tblData_All, "Typ", "byt")
+'     End If
+'
+'
+'     ' Dotaz na uživatele, zda chce spustit další proceduru
+'     pokracovat = MsgBox("Chcete pøidat list jen s rodinnými domy?", vbYesNo + vbQuestion, "Potvrzení")
+'
+'     If pokracovat = vbYes Then
+'        Call CopyAndModifyTable("data_rd_", timestamp, "data_rd", tblData_All, "Typ", "rodinný dùm")
+'     End If
+'
+'
+'     ' Dotaz na uživatele, zda chce spustit další proceduru
+'     pokracovat = MsgBox("Chcete pøidat list jen s pozemky?", vbYesNo + vbQuestion, "Potvrzení")
+'
+'     If pokracovat = vbYes Then
+'        Call CopyAndModifyTable("data_pozemky_", timestamp, "data_pozemky", tblData_All, "Nemovitost", "parcela")
+'     End If
+'
+'     ' Dotaz na uživatele, zda chce spustit další proceduru
+'     pokracovat = MsgBox("Chcete pøidat list jen s garážemi?", vbYesNo + vbQuestion, "Potvrzení")
+'
+'     If pokracovat = vbYes Then
+'        Call CopyAndModifyTable("data_garaze_", timestamp, "data_garaze", tblData_All, "Typ", "garáž")
+'     End If
+'
 
     
 End Sub
@@ -258,6 +260,12 @@ Sub UpravitTabulkuData_All(TargetWs As Worksheet)
     Dim headerRange As Range
     Dim firstColumnRange As Range
     
+   
+    Dim noveSloupce As Variant
+    Dim pozice As Integer
+    Dim vzorec As String
+    Dim i As Long
+    
     ' Definovat rozsah dat
     ' TargetWs.Range("A1"): Toto oznaèuje buòku A1 na listu TargetWs.
     ' CurrentRegion: Tato vlastnost vrací oblast sousedících bunìk, která obsahuje data a je ohranièena prázdnými øádky a sloupci.
@@ -281,6 +289,33 @@ Sub UpravitTabulkuData_All(TargetWs As Worksheet)
     ' Prejmenování sloupce s plochou
     tblData_All.ListColumns("Plocha (v m2)").Name = "Plocha [m2]"
     
+    
+    '------------------------------------------------------------------------------------------------
+    pozice = 7 ' Místo, kam pøidat nové sloupce (za 7 sloupec, coz je adresa)
+    
+    ' Definujte nové názvy sloupcù
+    noveSloupce = Array("LAT", "LON", "Vzdálenost [Km]")
+    
+    ' Definujte vzorec pro pøidaný sloupec Vzdálenost [Km]
+    vzorec = "=6371*ARCCOS(COS(RADIANS([@LAT]))*COS(RADIANS($AC$1))*COS(RADIANS($AC$2)-RADIANS([@LON]))+SIN(RADIANS([@LAT]))*SIN(RADIANS($AC$1)))"
+    
+    ' Pøidat nové sloupce
+    For i = 0 To UBound(noveSloupce)
+        tblData_All.ListColumns.Add (pozice + i)
+        tblData_All.ListColumns(pozice + i).Name = noveSloupce(i)
+    Next i
+    
+    ' Vložení vzorce pro vzdálenost
+    
+     With tblData_All.ListColumns(pozice + 2).DataBodyRange
+        .Formula = vzorec
+     End With
+    '------------------------------------------------------------------------------------------------
+    
+    
+    
+    
+    
 
     ' Pøidat nové sloupce s výpoèty
     With tblData_All
@@ -289,6 +324,11 @@ Sub UpravitTabulkuData_All(TargetWs As Worksheet)
 
         .ListColumns.Add.Name = "jednotka"
         .ListColumns("jednotka").DataBodyRange.Formula = "=COUNTIFS([Èíslo vkladu],[@[Èíslo vkladu]],[Nemovitost],""jednotka"")"
+        
+        
+        .ListColumns.Add.Name = "byt"
+        .ListColumns("byt").DataBodyRange.Formula = "=COUNTIFS([Èíslo vkladu],[@[Èíslo vkladu]],[Typ],""byt"")+COUNTIFS([Èíslo vkladu],[@[Èíslo vkladu]],[Typ],""ateliér"")"
+
 
         .ListColumns.Add.Name = "budova"
         .ListColumns("budova").DataBodyRange.Formula = "=COUNTIFS([Èíslo vkladu],[@[Èíslo vkladu]],[Nemovitost],""budova"")"
@@ -302,28 +342,43 @@ Sub UpravitTabulkuData_All(TargetWs As Worksheet)
         .ListColumns.Add.Name = "garáž"
         .ListColumns("garáž").DataBodyRange.Formula = "=COUNTIFS([Èíslo vkladu],[@[Èíslo vkladu]],[Typ],""garáž"")"
 
+        .ListColumns.Add.Name = "SUM Plocha bytù dle øízení [m2]"
+        .ListColumns("SUM Plocha bytù dle øízení [m2]").DataBodyRange.Formula = "=SUMIFS([Plocha '[m2']],[Èíslo vkladu],[@[Èíslo vkladu]],[Typ],""byt"") + SUMIFS([Plocha '[m2']],[Èíslo vkladu],[@[Èíslo vkladu]],[Typ],""ateliér"")"
 
+        .ListColumns.Add.Name = "SUM Cena bytù dle øízení [Kè]"
+        .ListColumns("SUM Cena bytù dle øízení [Kè]").DataBodyRange.Formula = "=IFERROR(AVERAGEIFS([Cenový údaj],[Èíslo vkladu],[@[Èíslo vkladu]],[Typ],""byt""),0) + IFERROR(AVERAGEIFS([Cenový údaj],[Èíslo vkladu],[@[Èíslo vkladu]],[Typ],""ateliér""),0)"
 
-        .ListColumns.Add.Name = "JC [Kè/m2]"
-        On Error Resume Next
-        ' Vložit vzorec do první buòky sloupce
-        .ListColumns("JC [Kè/m2]").DataBodyRange.Cells(1, 1).FormulaLocal = "=KDYŽ(NEBO(A([@Typ]=""rodinný dùm"");A([@Typ]=""byt"");A([@Typ]=""ateliér"");A([@Typ]=""garáž"";[@nem]<>""jednotka"";[@garáž]=1;[@nem]<=3;[@parcela]<=2));[@[Cenový údaj]]/[@[Plocha '[m2']]];KDYŽ(A([@nem]=""parcela"";[@jednotka]=0;[@budova]=0);[@[Cenový údaj]]/SUMIFS([Plocha '[m2']];[Èíslo vkladu];[@[Èíslo vkladu]]);KDYŽ(A([@Typ]=""garáž"";[@Nemovitost]=""jednotka"";[@nem]=1);[@[Cenový údaj]];0)))"
-        If Err.Number <> 0 Then
-            Debug.Print "Chyba pøi vkládání vzorce do první buòky sloupce 'JC [Kè/m2]': " & Err.Description
-            Err.Clear
-        End If
-        ' Rozšíøit vzorec na celý sloupec
-        .ListColumns("JC [Kè/m2]").DataBodyRange.FillDown
-        On Error GoTo 0
+        .ListColumns.Add.Name = "JC byty [Kè/m2]"
+        .ListColumns("JC byty [Kè/m2]").DataBodyRange.Formula2 = "=IFERROR(KDYŽ(A([@byt]>0),[@[SUM Cena bytù dle øízení '[Kè']]]/[@[SUM Plocha bytù dle øízení '[m2']]],""""),0)"
 
+        .ListColumns.Add.Name = "Q_JC byty"
+        .ListColumns("Q_JC byty").DataBodyRange.Formula = "=KDYŽ([@[JC byty '[Kè/m2']]]<=PERCENTIL.INC([JC byty '[Kè/m2']], 0.25), 1,KDYŽ([@[JC byty '[Kè/m2']]]<=PERCENTIL.INC([JC byty '[Kè/m2']], 0.5), 2,KDYŽ([@[JC byty '[Kè/m2']]]<=PERCENTIL.INC([JC byty '[Kè/m2']], 0.75), 3, 4)))"
+       
+        
+        .ListColumns.Add.Name = "SUM Plocha garáží dle øízení [m2]"
+        .ListColumns("SUM Plocha garáží dle øízení [m2]").DataBodyRange.Formula = "=SUMIFS([Plocha '[m2']],[Èíslo vkladu],[@[Èíslo vkladu]],[Typ],""garáž"")"
 
+        .ListColumns.Add.Name = "SUM Cena garáží dle øízení [Kè]"
+        .ListColumns("SUM Cena garáží dle øízení [Kè]").DataBodyRange.Formula = "=IFERROR(AVERAGEIFS([Cenový údaj],[Èíslo vkladu],[@[Èíslo vkladu]],[Typ],""garáž""),0)"
 
-        '.ListColumns.Add.Name = "JC quartily"
-        '.ListColumns("JC quartily").DataBodyRange.Formula = "=SVYHLEDAT([@[JC '[Kè/m2']]],$AK$2:$AL$6,$AL$2:$AL$6)"
+        .ListColumns.Add.Name = "JC garáže [Kè/m2]"
+        .ListColumns("JC garáže [Kè/m2]").DataBodyRange.Formula2 = "=IFERROR(KDYŽ(A([@garáž]>0,[@nem]=[@garáž]),[@[SUM Cena garáží dle øízení '[Kè']]]/[@[SUM Plocha garáží dle øízení '[m2']]],""""),0)"
+
+        .ListColumns.Add.Name = "SUM Plocha pozemkù dle øízení [m2]"
+        .ListColumns("SUM Plocha pozemkù dle øízení [m2]").DataBodyRange.Formula = "=SUMIFS([Plocha '[m2']],[Èíslo vkladu],[@[Èíslo vkladu]],[Nemovitost],""parcela"")"
+
+        .ListColumns.Add.Name = "SUM Cena pozemkù dle øízení [Kè]"
+        .ListColumns("SUM Cena pozemkù dle øízení [Kè]").DataBodyRange.Formula = "=IFERROR(AVERAGEIFS([Cenový údaj],[Èíslo vkladu],[@[Èíslo vkladu]],[Nemovitost],""parcela""),"""")"
+
+        .ListColumns.Add.Name = "JC pozemky [Kè/m2]"
+        .ListColumns("JC pozemky [Kè/m2]").DataBodyRange.Formula2 = "=IFERROR(KDYŽ(A([@parcela]>0,[@nem]=[@parcela]),[@[SUM Cena pozemkù dle øízení '[Kè']]]/[@[SUM Plocha pozemkù dle øízení '[m2']]],""""),"""")"
+
     End With
 
 
     
+        '.ListColumns.Add.Name = "JC quartily"
+        '.ListColumns("JC quartily").DataBodyRange.Formula = "=SVYHLEDAT([@[JC '[Kè/m2']]],$AK$2:$AL$6,$AL$2:$AL$6)"
     
     Debug.Print "Tabulka " & tblData_All.Name & " vytvoøena a upravena."
 End Sub
@@ -347,9 +402,7 @@ Sub FormatTable(sheetName As String, tableName As String)
             ' Nastavení stylu tabulky
             ActiveSheet.ListObjects(tblData_All.Name).TableStyle = "TableStyleLight8"
             
-            ' ActiveSheet.ListObjects("data_all_1").TableStyle = ""
-        
-            
+           
             
             ' Nastavit barvu záhlaví na šedou
             tbl.HeaderRowRange.Interior.Color = RGB(150, 150, 150) ' šedá barva
@@ -358,6 +411,39 @@ Sub FormatTable(sheetName As String, tableName As String)
             ' Nastavit barvu prvního sloupce na šedou
             tbl.ListColumns(1).DataBodyRange.Interior.Color = RGB(150, 150, 150) ' šedá barva
 
+            ' Zmena barev nekterych sloupcu v zahlavi
+            With tbl.HeaderRowRange
+                ' Zmìna barvy písma
+                '.Find("byt").Font.Color = RGB(0, 0, 0)
+                
+                ' hleda presny obsah zahlavi "nem" nikoliv zahlavi bunky kde "nem" muze byt jen soucasti nazvu
+                .Find(What:="nem", LookIn:=xlValues, LookAt:=xlWhole).Interior.Color = RGB(0, 102, 255)
+                
+                
+                .Find("jednotka").Interior.Color = RGB(255, 165, 0)
+                .Find("byt").Interior.Color = RGB(210, 210, 0)
+                .Find("parcela").Interior.Color = RGB(51, 204, 51)
+                .Find("rd").Interior.Color = RGB(173, 216, 230)
+                .Find("garáž").Interior.Color = RGB(216, 109, 205)
+                
+                .Find("SUM Plocha bytù dle øízení [m2]").Interior.Color = RGB(210, 210, 0)
+                .Find("SUM Cena bytù dle øízení [Kè]").Interior.Color = RGB(210, 210, 0)
+                .Find("JC byty [Kè/m2]").Interior.Color = RGB(210, 210, 0)
+                .Find("Q_JC byty").Interior.Color = RGB(210, 210, 0)
+                
+                
+                .Find("SUM Plocha garáží dle øízení [m2]").Interior.Color = RGB(216, 109, 205)
+                .Find("SUM Cena garáží dle øízení [Kè]").Interior.Color = RGB(216, 109, 205)
+                .Find("JC garáže [Kè/m2]").Interior.Color = RGB(216, 109, 205)
+               
+                .Find("SUM Plocha pozemkù dle øízení [m2]").Interior.Color = RGB(51, 204, 51)
+                .Find("SUM Cena pozemkù dle øízení [Kè]").Interior.Color = RGB(51, 204, 51)
+                .Find("JC pozemky [Kè/m2]").Interior.Color = RGB(51, 204, 51)
+                
+                
+            End With
+                    
+            
             
             ' Nastavit formátování sloupcù
             With tblData_All.ListColumns("Datum podání").DataBodyRange
@@ -372,9 +458,37 @@ Sub FormatTable(sheetName As String, tableName As String)
             With tblData_All.ListColumns("Plocha [m2]").DataBodyRange
                 .NumberFormat = "#,##0.00"
             End With
-            With tblData_All.ListColumns("JC [Kè/m2]").DataBodyRange
+            
+            With tblData_All.ListColumns("SUM Plocha bytù dle øízení [m2]").DataBodyRange
+                .NumberFormat = "#,##0.00"
+            End With
+            With tblData_All.ListColumns("SUM Cena bytù dle øízení [Kè]").DataBodyRange
                 .NumberFormat = "#,##0"
             End With
+            With tblData_All.ListColumns("JC byty [Kè/m2]").DataBodyRange
+                .NumberFormat = "#,##0"
+            End With
+            With tblData_All.ListColumns("SUM Plocha garáží dle øízení [m2]").DataBodyRange
+                .NumberFormat = "#,##0.00"
+            End With
+            With tblData_All.ListColumns("SUM Cena garáží dle øízení [Kè]").DataBodyRange
+                .NumberFormat = "#,##0"
+            End With
+            With tblData_All.ListColumns("JC garáže [Kè/m2]").DataBodyRange
+                .NumberFormat = "#,##0"
+            End With
+            With tblData_All.ListColumns("SUM Plocha pozemkù dle øízení [m2]").DataBodyRange
+                .NumberFormat = "#,##0"
+            End With
+            With tblData_All.ListColumns("SUM Cena pozemkù dle øízení [Kè]").DataBodyRange
+                .NumberFormat = "#,##0"
+            End With
+            With tblData_All.ListColumns("JC pozemky [Kè/m2]").DataBodyRange
+                .NumberFormat = "#,##0"
+            End With
+            
+            
+            
             
             
             ' Pøidat podmínìné formátování pro sloupec "Nemovitost"
