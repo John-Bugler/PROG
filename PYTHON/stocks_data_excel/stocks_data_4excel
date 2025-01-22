@@ -1,0 +1,118 @@
+import yfinance as yf
+import pandas as pd
+from openpyxl import load_workbook
+from openpyxl.utils import get_column_letter
+from openpyxl.styles import Alignment, Font, PatternFill
+from openpyxl.worksheet.table import Table, TableStyleInfo
+from datetime import datetime
+
+# Funkce pro automatické přizpůsobení šířky sloupců a úpravu formátování
+def adjust_column_width(file_name, sheet_name):
+    wb = load_workbook(file_name)
+    sheet = wb[sheet_name]
+
+    # Nastavení stylu hlavičky
+    header_fill = PatternFill(start_color="D9D9D9", end_color="D9D9D9", fill_type="solid")  # Světle šedé pozadí
+    header_font = Font(bold=True)  # Tučné písmo
+
+    # Zarovnání a nastavení šířky sloupců
+    for col in sheet.columns:
+        max_length = 0
+        col_letter = get_column_letter(col[0].column)  # Získání písmena sloupce
+
+        for cell in col:
+            # Zarovnání doleva
+            cell.alignment = Alignment(horizontal="left")
+
+            # Úprava stylu hlavičky
+            if cell.row == 1:  # Pokud je buňka v prvním řádku (hlavička)
+                cell.fill = header_fill
+                cell.font = header_font
+
+            # Nastavení šířky sloupců
+            try:
+                if cell.value:
+                    max_length = max(max_length, len(str(cell.value)))
+            except:
+                pass
+
+        adjusted_width = max_length + 2  # Rezerva pro čitelnost
+        sheet.column_dimensions[col_letter].width = adjusted_width
+
+    # Přidání tabulky s neutrálním stylem
+    if sheet.max_row > 1 and sheet.max_column > 1:  # Zkontroluje, zda jsou v listu data
+        table_range = f"A1:{get_column_letter(sheet.max_column)}{sheet.max_row}"
+        table = Table(displayName=sheet_name.replace(" ", "_"), ref=table_range)
+        # Styl tabulky bez barev
+        style = TableStyleInfo(name="TableStyleMedium1", showFirstColumn=True,
+                               showLastColumn=False, showRowStripes=False, showColumnStripes=False)
+        table.tableStyleInfo = style
+        sheet.add_table(table)
+
+    wb.save(file_name)
+
+# Zadejte ticker
+ticker_symbol = input("Zadejte ticker akcie (např. AAPL, MSFT): ").upper()
+
+# Načtení dat o tickeru
+ticker = yf.Ticker(ticker_symbol)
+
+# Historická data - posledních 5 let
+end_date = datetime.today()
+start_date = end_date.replace(year=end_date.year - 5)
+historical_data = ticker.history(start=start_date, end=end_date)
+historical_data.index = historical_data.index.tz_localize(None)
+
+# Základní informace
+info = ticker.info
+
+# Konverze základních informací na řádkový formát
+info_df = pd.DataFrame(list(info.items()), columns=["Klíč", "Hodnota"])
+
+# Finanční data (např. výkazy zisků, bilance, cash flow)
+financials = ticker.financials
+balance_sheet = ticker.balance_sheet
+cashflow = ticker.cashflow
+
+# Dividendová historie
+dividends = ticker.dividends
+dividends.index = dividends.index.tz_localize(None)
+
+# Akciové splity
+splits = ticker.splits
+splits.index = splits.index.tz_localize(None)
+
+# Generování názvu souboru s timestampem
+timestamp = datetime.now().strftime("%Y%m%d_%H_%M_%S")
+output_file = f"{ticker_symbol}_{timestamp}.xlsx"
+
+# Zajištění, že všechny názvy sloupců jsou řetězce
+def ensure_string_headers(df):
+    df.columns = [str(col) for col in df.columns]
+    return df
+
+# Uložení dat do Excelu
+with pd.ExcelWriter(output_file, engine="openpyxl") as writer:
+    ensure_string_headers(info_df).to_excel(writer, sheet_name="Základní info", index=False)
+    ensure_string_headers(historical_data).to_excel(writer, sheet_name="Historická data")
+    ensure_string_headers(financials).to_excel(writer, sheet_name="Finanční výkazy")
+    ensure_string_headers(balance_sheet).to_excel(writer, sheet_name="Rozvaha")
+    ensure_string_headers(cashflow).to_excel(writer, sheet_name="Cash Flow")
+    ensure_string_headers(dividends.to_frame(name="Dividendy")).to_excel(writer, sheet_name="Dividendy")
+    ensure_string_headers(splits.to_frame(name="Splity")).to_excel(writer, sheet_name="Splity")
+
+# Úprava šířky sloupců a formátování pro všechny listy
+for sheet in ["Historická data", "Základní info", "Finanční výkazy", "Rozvaha", "Cash Flow", "Dividendy", "Splity"]:
+    adjust_column_width(output_file, sheet)
+
+print(f"Všechna data o tickeru {ticker_symbol} byla uložena do souboru {output_file}")
+
+
+
+
+
+
+
+
+
+
