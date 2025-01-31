@@ -8,7 +8,7 @@ import os
 from opencage.geocoder import OpenCageGeocode
 
 # API klíč
-api_key = 'fe6bc2506ac04e1285831d7b0e96ff84'
+api_key = '85af71fbd7334627a5b84894066a8a18'
 geocoder = OpenCageGeocode(api_key)
 
 # Slovník pro udržení již zpracovaných adres a GPS souřadnic
