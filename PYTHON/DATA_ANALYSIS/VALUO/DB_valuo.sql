@@ -1,178 +1,364 @@
-/*
-USE VALUO
---  struktura tabulky dle export filu tahanych z valua
-Drop table Valuo_data;
-Create table Valuo_data
-	(
-    id INT IDENTITY(1,1) PRIMARY KEY,
-	timestamp datetime2(0) default (sysdatetime()), 
-    cislo_vkladu VARCHAR(50) NOT NULL,
-    datum_podani DATETIME NOT NULL,
-    datum_zplatneni DATETIME NOT NULL,
-    listina TEXT NOT NULL,
-    nemovitost VARCHAR(50) NOT NULL,
-    typ VARCHAR(100) NOT NULL,
-    adresa VARCHAR(400) NOT NULL,
-    cenovy_udaj DECIMAL(18,2) NOT NULL,
-    mena VARCHAR(10) NOT NULL,
-    plocha DECIMAL(10,2),
-    typ_plochy VARCHAR(300),
-    popis VARCHAR(800),
-    okres VARCHAR(100) NOT NULL,
-    kat_uzemi VARCHAR(100) NOT NULL,
-    rok INT NOT NULL,
-    mesic INT NOT NULL,
-	LAT DECIMAL(9,7),
-    LON DECIMAL(9,7)
- 
-	);
-*/
+-- Intervaly pro typ 'byt'
+DECLARE @byt_price_lower INT = 500000;
+DECLARE @byt_price_upper INT = 40000000;
+DECLARE @byt_area_lower DECIMAL(10,2) = 15;
+DECLARE @byt_area_upper DECIMAL(10,2) = 300;
+
+-- Intervaly pro typ 'ateliér'
+DECLARE @ateliér_price_lower INT = 400000;
+DECLARE @ateliér_price_upper INT = 20000000;
+DECLARE @ateliér_area_lower DECIMAL(10,2) = 10;
+DECLARE @ateliér_area_upper DECIMAL(10,2) = 200;
+
+-- Intervaly pro typ 'rodinný dùm'
+DECLARE @rodinny_dum_price_lower INT = 1500000;
+DECLARE @rodinny_dum_price_upper INT = 300000000;
+DECLARE @rodinny_dum_area_lower DECIMAL(10,2) = 50;
+DECLARE @rodinny_dum_area_upper DECIMAL(10,2) = 750;
+
+-- Intervaly pro typ 'bytový dùm'
+DECLARE @bytovy_dum_price_lower INT = 1000000;
+DECLARE @bytovy_dum_price_upper INT = 400000000;
+DECLARE @bytovy_dum_area_lower DECIMAL(10,2) = 100;
+DECLARE @bytovy_dum_area_upper DECIMAL(10,2) = 6000;
+
+-- Intervaly pro typ 'garáž'
+DECLARE @garaz_price_lower INT = 20000;
+DECLARE @garaz_price_upper INT = 50000000;
+DECLARE @garaz_area_lower DECIMAL(10,2) = 10;
+DECLARE @garaz_area_upper DECIMAL(10,2) = 5000;
+
+-- Intervaly pro typ 'stavba pro rodinnou rekreaci'
+DECLARE @stavba_rod_rek_price_lower INT = 100000;
+DECLARE @stavba_rod_rek_price_upper INT = 15000000;
+DECLARE @stavba_rod_rek_area_lower DECIMAL(10,2) = 20;
+DECLARE @stavba_rod_rek_area_upper DECIMAL(10,2) = 350;
+
+-- Intervaly pro typ 'objekt bydlení'
+DECLARE @objekt_bydleni_price_lower INT = 1500000;
+DECLARE @objekt_bydleni_price_upper INT = 300000000;
+DECLARE @objekt_bydleni_area_lower DECIMAL(10,2) = 50;
+DECLARE @objekt_bydleni_area_upper DECIMAL(10,2) = 750;
+
+-- Intervaly pro typ 'jiná stavba'
+DECLARE @jina_stavba_price_lower INT = 1000000;
+DECLARE @jina_stavba_price_upper INT = 30000000;
+DECLARE @jina_stavba_area_lower DECIMAL(10,2) = 20;
+DECLARE @jina_stavba_area_upper DECIMAL(10,2) = 150;
+
+-- Intervaly pro typ 'jiný nebytový prostor'
+DECLARE @jiny_nebytovy_prostor_price_lower INT = 300000;
+DECLARE @jiny_nebytovy_prostor_price_upper INT = 30000000;
+DECLARE @jiny_nebytovy_prostor_area_lower DECIMAL(10,2) = 10;
+DECLARE @jiny_nebytovy_prostor_area_upper DECIMAL(10,2) = 150;
+
+-- Intervaly pro typ 'rozestavìná jednotka'
+DECLARE @rozestavena_jednotka_price_lower INT = 300000;
+DECLARE @rozestavena_jednotka_price_upper INT = 30000000;
+DECLARE @rozestavena_jednotka_area_lower DECIMAL(10,2) = 10;
+DECLARE @rozestavena_jednotka_area_upper DECIMAL(10,2) = 350;
 
 
+-- Hlavní dotaz – agregace podle cislo_vkladu
 
+WITH main AS (
+    SELECT
+        -- Unikátní èíslo øízení
+        cislo_vkladu,
+        
+        -- Základní údaje – u daného cislo_vkladu pøedpokládáme shodné hodnoty, proto používáme MAX.
+        MAX(CAST(listina AS VARCHAR(MAX)))         AS listina,
+        MAX(datum_podani)                          AS datum_podani,
+        MAX(rok)                                   AS rok,
+        MAX(mesic)                                 AS mesic,
+        MAX(okres)                                 AS okres,
+        MAX(kat_uzemi)                             AS kat_uzemi,
+        MAX(CAST(adresa AS VARCHAR(MAX)))          AS adresa,
+        MAX(LAT)                                   AS LAT,
+        MAX(LON)                                   AS LON,
+        MAX(mena)                                  AS mena,
+        FLOOR(MAX(cenovy_udaj))                    AS cenovy_udaj,
+        
 
+        -- Poèet všech nemovitostí v rámci cislo_vkladu
+        COUNT(*)                                   AS [#_NEMOVITOSTI],
+        
+        SUM(CASE WHEN nemovitost = 'budova'   THEN 1 ELSE 0 END)               AS [#_BUDOVA],
+        -- Poèty pro typy BUDOVA
+        SUM(CASE WHEN typ = 'rodinný dùm'    THEN 1 ELSE 0 END)                AS [#_rodinny_dum],
+        SUM(CASE WHEN typ = 'bytový dùm'     THEN 1 ELSE 0 END)                AS [#_bytovy_dum],
+        SUM(CASE WHEN typ = 'stavba pro rodinnou rekreaci' THEN 1 ELSE 0 END)  AS [#_stavba_rod_rek],
+        SUM(CASE WHEN typ = 'objekt bydlení'               THEN 1 ELSE 0 END)  AS [#_objekt_bydleni],
+        SUM(CASE WHEN typ = 'jiná stavba'                   THEN 1 ELSE 0 END) AS [#_jina_stavba],
+        
+        SUM(CASE WHEN nemovitost = 'jednotka'  THEN 1 ELSE 0 END)              AS [#_JEDNOTKA],
+        SUM(CASE WHEN typ = 'byt'            THEN 1 ELSE 0 END)                AS [#_byt],
+        SUM(CASE WHEN typ = 'ateliér'        THEN 1 ELSE 0 END)                AS [#_atelier],
+        SUM(CASE WHEN typ = 'jiný nebytový prostor'         THEN 1 ELSE 0 END) AS [#_jiny_nebytovy_prostor],
+        SUM(CASE WHEN typ = 'rozestavìná jednotka'          THEN 1 ELSE 0 END) AS [#_rozestavena_jednotka],
+       
+        SUM(CASE WHEN typ = 'garáž'         THEN 1 ELSE 0 END)                 AS [#_garaz],
+        
+        SUM(CASE WHEN nemovitost = 'parcela'   THEN 1 ELSE 0 END) AS [#_PARCELA],
+        SUM(CASE WHEN typ = 'zastavìná plocha a nádvoøí' THEN 1 ELSE 0 END)           AS [#_zastavena_plocha],
+        SUM(CASE WHEN typ = 'zahrada' THEN 1 ELSE 0 END)                              AS [#_zahrada],
+        SUM(CASE WHEN typ = 'jiná plocha' THEN 1 ELSE 0 END)                          AS [#_jina_plocha],
+        SUM(CASE WHEN typ = 'orná pùda' THEN 1 ELSE 0 END)                            AS [#_orna_puda],
+        SUM(CASE WHEN typ = 'zeleò' THEN 1 ELSE 0 END)                                AS [#_zelen],
+        SUM(CASE WHEN typ = 'ostatní komunikace' THEN 1 ELSE 0 END)                   AS [#_ostatni_komunikace],
+        
 
--- souhrnny prehled DAT
-select 
-  
-  count(distinct concat(kat_uzemi, '-', rok, '-', mesic)) as [#souboru],  -- poèet unikátních kombinací kat_uzemi, rok, mesic = 1 soubor VALUO
-  count(cislo_vkladu) as [#v],  -- celkový poèet záznamù
-    (select count(*) 
-     from (
-         select distinct 
-             cislo_vkladu, 
-             datum_podani, 
-             datum_zplatneni, 
-             cast(listina as varchar(max)) as listina, 
-             nemovitost, 
-             typ, 
-             cast(adresa as varchar(max)) as adresa, 
-             cenovy_udaj, 
-             mena, 
-             plocha, 
-             cast(typ_plochy as varchar(max)) as typ_plochy, 
-             cast(popis as varchar(max)) as popis, 
-             okres, 
-             kat_uzemi, 
-             rok, 
-             mesic, 
-             lat, 
-             lon
-         from valuo_data
-     ) as subquery) as [#v_unique],  -- poèet unikátních záznamù
-
-    count(case when lat is not null and lon is not null then 1 end) as [#v_YES_gps],  -- poèet záznamù s gps
-    count(case when lat is null and lon is null then 1 end) as [#v_NO_gps],  -- poèet záznamù s gps
-
-    (select count(*) 
-     from (
-         select distinct lat, lon  
-         from valuo_data 
-         where lat is not null and lon is not null
-     ) as gps_unique
-    ) as [#v_gps_unique],  -- poèet unikátních gps souøadnic
-
-	(select count(*) from valuo_data where adresa <> 'Neznámá adresa') as [#adresa],
-
-    (select count(*) 
-     from (
-         select distinct adresa  
-         from valuo_data 
-         where adresa <> 'Neznámá adresa'
-     ) as adresa_unique
-    ) as [#adresa_unique],
-
-    (select count(*) from valuo_data where adresa = 'Neznámá adresa') as [#adresa_neznama],
-
-	
-	count(distinct okres) as [#okresu], 
-	count(distinct concat(okres, '-', kat_uzemi)) as [#kat_uzemi], 
-	
-	
-	(select count(*) from valuo_data where nemovitost = 'budova') as [#budova],
-    (select count(*) from valuo_data where nemovitost = 'jednotka') as [#jednotka],
-	(select count(*) from valuo_data where nemovitost = 'parcela') as [#parcela],
-
-	(select count(*) from valuo_data where typ = 'rodinný dùm') as [#RD],
-	(select count(*) from valuo_data where typ = 'byt') as [#byt],
-	(select count(*) from valuo_data where typ = 'ateliér') as [#atelier]
-
-
-from [valuo].[dbo].[valuo_data];
-
--- prehled po okresech, kat_uzemi, letech, mesicich
-select 
-     okres,
-     kat_uzemi,
-     rok,
-     mesic,
-     count(cislo_vkladu) as [#v],  -- celkový poèet záznamù
-     count(case when lat is not null and lon is not null then 1 end) as [#v_gps],  -- poèet záznamù s gps
-     (select count(*) 
-      from (
-          select distinct lat, lon  
-          from valuo_data v
-          where v.kat_uzemi = vd.kat_uzemi 
-            and v.rok = vd.rok 
-            and v.mesic = vd.mesic
-            and v.lat is not null 
-            and v.lon is not null
-      ) as gps_unique
-     ) as [#v_gps_unique],  -- poèet unikátních gps souøadnic pro danou skupinu
-
-     count(case when nemovitost = 'budova' then 1 end) as [budova],  -- poèet budov
-     count(case when nemovitost = 'jednotka' then 1 end) as [jednotka],  -- poèet jednotek
-     count(case when nemovitost = 'parcela' then 1 end) as [parcela]  -- poèet parcel
-from [valuo].[dbo].[valuo_data] vd
-group by
-     okres,
-     kat_uzemi,
-     rok,
-     mesic
-order by okres, kat_uzemi, rok, mesic desc;
-
-
-
-select * from [dbo].[Valuo_data]
-
-
-/*
-
-select top 10 
-		cast(adresa as nvarchar(max)) as adresa
-		, lat
-		, lon
-		, nemovitost
-		, plocha
-		, mena
-		, cenovy_udaj
-		, cenovy_udaj/plocha as jc
-from [VALUO].[dbo].[Valuo_data]
-where lat is not null and lon is not null 
-		and lat != 0 and lon != 0 
-		and nemovitost = 'jednotka' 
-		and cenovy_udaj is not null 
-		and cenovy_udaj != 0 
-		and plocha > 0
-		and mena = 'czk'
-group by cast(adresa as nvarchar(max)), lat, lon, nemovitost, plocha, mena, cenovy_udaj
-order by jc asc
-
-*/
-
-
-/*
-
-UPDATE [valuo].[dbo].[valuo_data] 
-SET LAT = NULL, LON = NULL 
-WHERE LAT IS not NULL AND LON IS not NULL;
-
-*/
-
-/*
-UPDATE [valuo].[dbo].[valuo_data] 
-SET GPS_API_info = 'OK' 
-WHERE id BETWEEN 1 AND 1705;
-*/
-
-
+        -- Pro budovy
+        ROUND(SUM(CASE WHEN typ = 'rodinný dùm' THEN plocha ELSE 0 END), 2)                  AS A_rodinny_dum,
+        ROUND(SUM(CASE WHEN typ = 'bytový dùm' THEN plocha ELSE 0 END), 2)                   AS A_bytovy_dum,
+        ROUND(SUM(CASE WHEN typ = 'stavba pro rodinnou rekreaci' THEN plocha ELSE 0 END), 2) AS A_stavba_rod_rek,
+        ROUND(SUM(CASE WHEN typ = 'objekt bydlení' THEN plocha ELSE 0 END), 2)               AS A_objekt_bydleni,
+        ROUND(SUM(CASE WHEN typ = 'jiná stavba' THEN plocha ELSE 0 END), 2)                  AS A_jina_stavba,
+        
+        -- Pro jednotky
+        ROUND(SUM(CASE WHEN typ IN ('byt','ateliér') THEN plocha ELSE 0 END), 2)              AS A_byt,
+        ROUND(SUM(CASE WHEN typ = 'jiný nebytový prostor' THEN plocha ELSE 0 END), 2)         AS A_jiny_nebytovy_prostor,
+        ROUND(SUM(CASE WHEN typ = 'rozestavìná jednotka' THEN plocha ELSE 0 END), 2)          AS A_rozestavena_jednotka,
+        
+        ROUND(SUM(CASE WHEN typ = 'garáž' THEN plocha ELSE 0 END), 2)                         AS A_garaz,
+        ROUND(SUM(CASE WHEN nemovitost = 'parcela' THEN plocha ELSE 0 END), 2)                AS A_parcela,
+        
+   
+        CASE 
+           WHEN SUM(CASE WHEN typ IN ('byt','ateliér') THEN 1 ELSE 0 END) > 0 
+              THEN 'byt/ateliér'
+           WHEN SUM(CASE WHEN typ IN ('jiný nebytový prostor') THEN 1 ELSE 0 END) > 0 
+              THEN 'jiný nebytový prostor'
+           WHEN SUM(CASE WHEN typ IN ('rozestavìná jednotka') THEN 1 ELSE 0 END) > 0 
+              THEN 'rozestavìná jednotka'
+           WHEN SUM(CASE WHEN typ IN ('bytový dùm') THEN 1 ELSE 0 END) > 0 
+              THEN 'bytový dùm'
+           WHEN SUM(CASE WHEN typ IN ('rodinný dùm') THEN 1 ELSE 0 END) > 0 
+              THEN 'rodinný dùm'
+           WHEN SUM(CASE WHEN typ IN ('stavba pro rodinnou rekreaci') THEN 1 ELSE 0 END) > 0 
+              THEN 'stavba pro rodinnou rekreaci'
+           WHEN SUM(CASE WHEN typ IN ('objekt bydlení') THEN 1 ELSE 0 END) > 0 
+              THEN 'objekt bydlení'
+           WHEN SUM(CASE WHEN typ IN ('jiná stavba') THEN 1 ELSE 0 END) > 0 
+              THEN 'jiná stavba'
+           WHEN SUM(CASE WHEN typ = 'garáž' THEN 1 ELSE 0 END) > 0 
+              THEN 'garáž'
+           WHEN SUM(CASE WHEN nemovitost = 'parcela' THEN 1 ELSE 0 END) > 0 
+              THEN 'parcela'
+           ELSE NULL
+        END AS TYP,
+        
+        CASE 
+           WHEN SUM(CASE WHEN typ IN ('byt','ateliér','jiný nebytový prostor','rozestavìná jednotka') THEN 1 ELSE 0 END) > 0 THEN '[m2]'
+           WHEN SUM(CASE WHEN typ IN ('rodinný dùm','stavba pro rodinnou rekreaci','objekt bydlení','jiná stavba','bytový dùm') THEN 1 ELSE 0 END) > 0 THEN '[m2]'
+           WHEN SUM(CASE WHEN typ = 'garáž' THEN 1 ELSE 0 END) > 0 THEN '[pocet]'
+           WHEN SUM(CASE WHEN nemovitost = 'parcela' THEN 1 ELSE 0 END) > 0 THEN '[m2]'
+           ELSE NULL
+        END AS MJ,
+        
+        ROUND(
+          CASE 
+             WHEN SUM(CASE WHEN typ IN ('byt','ateliér') THEN 1 ELSE 0 END) > 0 
+                THEN SUM(CASE WHEN typ IN ('byt','ateliér') THEN plocha ELSE 0 END)
+             WHEN SUM(CASE WHEN typ IN ('jiný nebytový prostor') THEN 1 ELSE 0 END) > 0 
+                THEN SUM(CASE WHEN typ IN ('jiný nebytový prostor') THEN plocha ELSE 0 END)
+             WHEN SUM(CASE WHEN typ IN ('rozestavìná jednotka') THEN 1 ELSE 0 END) > 0 
+                THEN SUM(CASE WHEN typ IN ('rozestavìná jednotka') THEN plocha ELSE 0 END)
+             WHEN SUM(CASE WHEN typ IN ('bytový dùm') THEN 1 ELSE 0 END) > 0 
+                THEN SUM(CASE WHEN typ IN ('bytový dùm') THEN plocha ELSE 0 END)
+             WHEN SUM(CASE WHEN typ IN ('rodinný dùm') THEN 1 ELSE 0 END) > 0 
+                THEN SUM(CASE WHEN typ IN ('rodinný dùm') THEN plocha ELSE 0 END)
+    	     WHEN SUM(CASE WHEN typ IN ('objekt bydlení') THEN 1 ELSE 0 END) > 0 
+                THEN SUM(CASE WHEN typ IN ('objekt bydlení') THEN plocha ELSE 0 END)
+             WHEN SUM(CASE WHEN typ IN ('stavba pro rodinnou rekreaci') THEN 1 ELSE 0 END) > 0 
+                THEN SUM(CASE WHEN typ IN ('stavba pro rodinnou rekreaci') THEN plocha ELSE 0 END)
+    	     WHEN SUM(CASE WHEN typ IN ('jiná stavba') THEN 1 ELSE 0 END) > 0 
+                THEN SUM(CASE WHEN typ IN ('jiná stavba') THEN plocha ELSE 0 END)
+             WHEN SUM(CASE WHEN typ = 'garáž' THEN 1 ELSE 0 END) > 0 
+                THEN SUM(CASE WHEN typ = 'garáž' THEN 1 ELSE 0 END)
+             WHEN SUM(CASE WHEN nemovitost = 'parcela' THEN 1 ELSE 0 END) > 0 
+                THEN SUM(CASE WHEN nemovitost = 'parcela' THEN plocha ELSE 0 END)
+             ELSE NULL
+          END, 2) AS POCET_MJ,
+        
+        CASE 
+          WHEN SUM(CASE WHEN typ IN ('byt','ateliér') THEN 1 ELSE 0 END) > 0 
+             THEN CAST(ROUND(MAX(cenovy_udaj)*1.0 / NULLIF(SUM(CASE WHEN typ IN ('byt','ateliér') THEN plocha ELSE 0 END), 0), 0) AS INT)
+          WHEN SUM(CASE WHEN typ IN ('jiný nebytový prostor') THEN 1 ELSE 0 END) > 0 
+             THEN CAST(ROUND(MAX(cenovy_udaj)*1.0 / NULLIF(SUM(CASE WHEN typ IN ('jiný nebytový prostor') THEN plocha ELSE 0 END), 0), 0) AS INT)
+          WHEN SUM(CASE WHEN typ IN ('rozestavìná jednotka') THEN 1 ELSE 0 END) > 0 
+             THEN CAST(ROUND(MAX(cenovy_udaj)*1.0 / NULLIF(SUM(CASE WHEN typ IN ('rozestavìná jednotka') THEN plocha ELSE 0 END), 0), 0) AS INT)
+          WHEN SUM(CASE WHEN typ IN ('bytový dùm') THEN 1 ELSE 0 END) > 0 
+             THEN CAST(ROUND(MAX(cenovy_udaj)*1.0 / NULLIF(SUM(CASE WHEN typ IN ('bytový dùm') THEN plocha ELSE 0 END), 0), 0) AS INT)
+          WHEN SUM(CASE WHEN typ IN ('rodinný dùm') THEN 1 ELSE 0 END) > 0 
+             THEN CAST(ROUND(MAX(cenovy_udaj)*1.0 / NULLIF(SUM(CASE WHEN typ IN ('rodinný dùm') THEN plocha ELSE 0 END), 0), 0) AS INT)
+          WHEN SUM(CASE WHEN typ IN ('objekt bydlení') THEN 1 ELSE 0 END) > 0 
+             THEN CAST(ROUND(MAX(cenovy_udaj)*1.0 / NULLIF(SUM(CASE WHEN typ IN ('objekt bydlení') THEN plocha ELSE 0 END), 0), 0) AS INT)
+          WHEN SUM(CASE WHEN typ IN ('stavba pro rodinnou rekreaci') THEN 1 ELSE 0 END) > 0 
+             THEN CAST(ROUND(MAX(cenovy_udaj)*1.0 / NULLIF(SUM(CASE WHEN typ IN ('stavba pro rodinnou rekreaci') THEN plocha ELSE 0 END), 0), 0) AS INT)
+          WHEN SUM(CASE WHEN typ IN ('jiná stavba') THEN 1 ELSE 0 END) > 0 
+             THEN CAST(ROUND(MAX(cenovy_udaj)*1.0 / NULLIF(SUM(CASE WHEN typ IN ('jiná stavba') THEN plocha ELSE 0 END), 0), 0) AS INT)
+          WHEN SUM(CASE WHEN typ = 'garáž' THEN 1 ELSE 0 END) > 0 
+             THEN CAST(ROUND(MAX(cenovy_udaj)*1.0 / NULLIF(SUM(CASE WHEN typ = 'garáž' THEN 1 ELSE 0 END), 0), 0) AS INT)
+          WHEN SUM(CASE WHEN nemovitost = 'parcela' THEN 1 ELSE 0 END) > 0 
+             THEN CAST(ROUND(MAX(cenovy_udaj)*1.0 / NULLIF(SUM(CASE WHEN nemovitost = 'parcela' THEN plocha ELSE 0 END), 0), 0) AS INT)
+          ELSE NULL
+        END AS JC
+    FROM [valuo].[dbo].[valuo_data]
+    GROUP BY cislo_vkladu
+    HAVING 
+      SUM(CASE WHEN typ IN (
+             'byt','ateliér','rodinný dùm','bytový dùm','garáž',
+             'stavba pro rodinnou rekreaci','objekt bydlení','jiná stavba',
+             'jiný nebytový prostor','rozestavìná jednotka',
+             'zastavìná plocha a nádvoøí','zahrada','jiná plocha','orná pùda','zeleò','ostatní komunikace'
+          ) THEN 1 ELSE 0 END) > 0
+      AND MIN(cenovy_udaj) > 0
+      AND MIN(plocha) > 0
+      -- Filtr pro 'byt'
+      AND (
+           SUM(CASE WHEN typ = 'byt' THEN 1 ELSE 0 END) = 0 
+           OR 
+           (MIN(CASE WHEN typ = 'byt' THEN cenovy_udaj END) >= @byt_price_lower 
+            AND MAX(CASE WHEN typ = 'byt' THEN cenovy_udaj END) <= @byt_price_upper)
+          )
+      AND (
+           SUM(CASE WHEN typ = 'byt' THEN 1 ELSE 0 END) = 0 
+           OR 
+           (MIN(CASE WHEN typ = 'byt' THEN plocha END) >= @byt_area_lower 
+            AND MAX(CASE WHEN typ = 'byt' THEN plocha END) <= @byt_area_upper)
+          )
+      -- Filtr pro 'ateliér'
+      AND (
+           SUM(CASE WHEN typ = 'ateliér' THEN 1 ELSE 0 END) = 0 
+           OR 
+           (MIN(CASE WHEN typ = 'ateliér' THEN cenovy_udaj END) >= @ateliér_price_lower 
+            AND MAX(CASE WHEN typ = 'ateliér' THEN cenovy_udaj END) <= @ateliér_price_upper)
+          )
+      AND (
+           SUM(CASE WHEN typ = 'ateliér' THEN 1 ELSE 0 END) = 0 
+           OR 
+           (MIN(CASE WHEN typ = 'ateliér' THEN plocha END) >= @ateliér_area_lower 
+            AND MAX(CASE WHEN typ = 'ateliér' THEN plocha END) <= @ateliér_area_upper)
+          )
+      -- Filtr pro 'rodinný dùm'
+      AND (
+           SUM(CASE WHEN typ = 'rodinný dùm' THEN 1 ELSE 0 END) = 0 
+           OR 
+           (MIN(CASE WHEN typ = 'rodinný dùm' THEN cenovy_udaj END) >= @rodinny_dum_price_lower 
+            AND MAX(CASE WHEN typ = 'rodinný dùm' THEN cenovy_udaj END) <= @rodinny_dum_price_upper)
+          )
+      AND (
+           SUM(CASE WHEN typ = 'rodinný dùm' THEN 1 ELSE 0 END) = 0 
+           OR 
+           (MIN(CASE WHEN typ = 'rodinný dùm' THEN plocha END) >= @rodinny_dum_area_lower 
+            AND MAX(CASE WHEN typ = 'rodinný dùm' THEN plocha END) <= @rodinny_dum_area_upper)
+          )
+      -- Filtr pro 'bytový dùm'
+      AND (
+           SUM(CASE WHEN typ = 'bytový dùm' THEN 1 ELSE 0 END) = 0 
+           OR 
+           (MIN(CASE WHEN typ = 'bytový dùm' THEN cenovy_udaj END) >= @bytovy_dum_price_lower 
+            AND MAX(CASE WHEN typ = 'bytový dùm' THEN cenovy_udaj END) <= @bytovy_dum_price_upper)
+          )
+      AND (
+           SUM(CASE WHEN typ = 'bytový dùm' THEN 1 ELSE 0 END) = 0 
+           OR 
+           (MIN(CASE WHEN typ = 'bytový dùm' THEN plocha END) >= @bytovy_dum_area_lower 
+            AND MAX(CASE WHEN typ = 'bytový dùm' THEN plocha END) <= @bytovy_dum_area_upper)
+          )
+      -- Filtr pro 'garáž'
+      AND (
+           SUM(CASE WHEN typ = 'garáž' THEN 1 ELSE 0 END) = 0 
+           OR 
+           (MIN(CASE WHEN typ = 'garáž' THEN cenovy_udaj END) >= @garaz_price_lower 
+            AND MAX(CASE WHEN typ = 'garáž' THEN cenovy_udaj END) <= @garaz_price_upper)
+          )
+      AND (
+           SUM(CASE WHEN typ = 'garáž' THEN 1 ELSE 0 END) = 0 
+           OR 
+           (MIN(CASE WHEN typ = 'garáž' THEN plocha END) >= @garaz_area_lower 
+            AND MAX(CASE WHEN typ = 'garáž' THEN plocha END) <= @garaz_area_upper)
+          )
+      -- Filtr pro 'stavba pro rodinnou rekreaci'
+      AND (
+           SUM(CASE WHEN typ = 'stavba pro rodinnou rekreaci' THEN 1 ELSE 0 END) = 0 
+           OR 
+           (MIN(CASE WHEN typ = 'stavba pro rodinnou rekreaci' THEN cenovy_udaj END) >= @stavba_rod_rek_price_lower 
+            AND MAX(CASE WHEN typ = 'stavba pro rodinnou rekreaci' THEN cenovy_udaj END) <= @stavba_rod_rek_price_upper)
+          )
+      AND (
+           SUM(CASE WHEN typ = 'stavba pro rodinnou rekreaci' THEN 1 ELSE 0 END) = 0 
+           OR 
+           (MIN(CASE WHEN typ = 'stavba pro rodinnou rekreaci' THEN plocha END) >= @stavba_rod_rek_area_lower 
+            AND MAX(CASE WHEN typ = 'stavba pro rodinnou rekreaci' THEN plocha END) <= @stavba_rod_rek_area_upper)
+          )
+      -- Filtr pro 'objekt bydlení'
+      AND (
+           SUM(CASE WHEN typ = 'objekt bydlení' THEN 1 ELSE 0 END) = 0 
+           OR 
+           (MIN(CASE WHEN typ = 'objekt bydlení' THEN cenovy_udaj END) >= @objekt_bydleni_price_lower 
+            AND MAX(CASE WHEN typ = 'objekt bydlení' THEN cenovy_udaj END) <= @objekt_bydleni_price_upper)
+          )
+      AND (
+           SUM(CASE WHEN typ = 'objekt bydlení' THEN 1 ELSE 0 END) = 0 
+           OR 
+           (MIN(CASE WHEN typ = 'objekt bydlení' THEN plocha END) >= @objekt_bydleni_area_lower 
+            AND MAX(CASE WHEN typ = 'objekt bydlení' THEN plocha END) <= @objekt_bydleni_area_upper)
+          )
+      -- Filtr pro 'jiná stavba'
+      AND (
+           SUM(CASE WHEN typ = 'jiná stavba' THEN 1 ELSE 0 END) = 0 
+           OR 
+           (MIN(CASE WHEN typ = 'jiná stavba' THEN cenovy_udaj END) >= @jina_stavba_price_lower 
+            AND MAX(CASE WHEN typ = 'jiná stavba' THEN cenovy_udaj END) <= @jina_stavba_price_upper)
+          )
+      AND (
+           SUM(CASE WHEN typ = 'jiná stavba' THEN 1 ELSE 0 END) = 0 
+           OR 
+           (MIN(CASE WHEN typ = 'jiná stavba' THEN plocha END) >= @jina_stavba_area_lower 
+            AND MAX(CASE WHEN typ = 'jiná stavba' THEN plocha END) <= @jina_stavba_area_upper)
+          )
+      -- Filtr pro 'jiný nebytový prostor'
+      AND (
+           SUM(CASE WHEN typ = 'jiný nebytový prostor' THEN 1 ELSE 0 END) = 0 
+           OR 
+           (MIN(CASE WHEN typ = 'jiný nebytový prostor' THEN cenovy_udaj END) >= @jiny_nebytovy_prostor_price_lower 
+            AND MAX(CASE WHEN typ = 'jiný nebytový prostor' THEN cenovy_udaj END) <= @jiny_nebytovy_prostor_price_upper)
+          )
+      AND (
+           SUM(CASE WHEN typ = 'jiný nebytový prostor' THEN 1 ELSE 0 END) = 0 
+           OR 
+           (MIN(CASE WHEN typ = 'jiný nebytový prostor' THEN plocha END) >= @jiny_nebytovy_prostor_area_lower 
+            AND MAX(CASE WHEN typ = 'jiný nebytový prostor' THEN plocha END) <= @jiny_nebytovy_prostor_area_upper)
+          )
+      -- Filtr pro 'rozestavìná jednotka'
+      AND (
+           SUM(CASE WHEN typ = 'rozestavìná jednotka' THEN 1 ELSE 0 END) = 0 
+           OR 
+           (MIN(CASE WHEN typ = 'rozestavìná jednotka' THEN cenovy_udaj END) >= @rozestavena_jednotka_price_lower 
+            AND MAX(CASE WHEN typ = 'rozestavìná jednotka' THEN cenovy_udaj END) <= @rozestavena_jednotka_price_upper)
+          )
+      AND (
+           SUM(CASE WHEN typ = 'rozestavìná jednotka' THEN 1 ELSE 0 END) = 0 
+           OR 
+           (MIN(CASE WHEN typ = 'rozestavìná jednotka' THEN plocha END) >= @rozestavena_jednotka_area_lower 
+            AND MAX(CASE WHEN typ = 'rozestavìná jednotka' THEN plocha END) <= @rozestavena_jednotka_area_upper)
+          )
+)
+-- Finální výstup – doplnìní concatenovaných sloupcù
+SELECT 
+    m.*,
+    STUFF(
+      (SELECT ' || ' + ISNULL(t.typ_plochy, '')
+       FROM [valuo].[dbo].[valuo_data] t
+       WHERE t.cislo_vkladu = m.cislo_vkladu
+       FOR XML PATH(''), TYPE
+      ).value('.', 'NVARCHAR(MAX)'), 1, 4, '') AS typ_plochy,
+    STUFF(
+      (SELECT ' || ' + ISNULL(t.popis, '')
+       FROM [valuo].[dbo].[valuo_data] t
+       WHERE t.cislo_vkladu = m.cislo_vkladu
+       FOR XML PATH(''), TYPE
+      ).value('.', 'NVARCHAR(MAX)'), 1, 4, '') AS popis
+FROM main m;
