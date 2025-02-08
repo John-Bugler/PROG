@@ -58,7 +58,7 @@ DECLARE @cols NVARCHAR(MAX),       -- Dynamický seznam let pro PIVOT
 -------------------------------------------------------------
 -- 1. Sestavení seznamu unikátních rokù jako názvù sloupcù
 -------------------------------------------------------------
--- Použití STRING_AGG pro SQL Server 2017+
+-- Použití STRING_AGG pro SQL Server 2017+ nebo starší metodu
 IF (SELECT @@VERSION) LIKE '%2017%' OR (SELECT @@VERSION) LIKE '%2019%' OR (SELECT @@VERSION) LIKE '%2022%'
 BEGIN
     SELECT @cols = STRING_AGG(QUOTENAME(CAST(rok AS VARCHAR(4))), ',') 
@@ -92,14 +92,14 @@ BEGIN
         FOR XML PATH(''), TYPE).value('.', 'NVARCHAR(MAX)'), 1, 1, '');
 END
 
--- Kontrola výstupu
+-- Kontrola výstupu seznamu sloupcù
 PRINT 'Seznam rokù pro PIVOT: ' + @cols;
 
 -------------------------------------------------------------
 -- 2. Sestavení dynamického dotazu s PIVOTem
 -------------------------------------------------------------
 SET @dynSQL = '
-SELECT ' + @cols + '          -- Dynamicky vytvoøené sloupce, tj. jednotlivé roky
+SELECT ' + @cols + '
 FROM (
     -- Poddotaz: vybíráme rok a cislo_vkladu z tabulky, kde jsou splnìny podmínky
     SELECT CAST(rok AS VARCHAR(4)) AS rok, cislo_vkladu
@@ -112,8 +112,8 @@ FROM (
       AND LON IS NOT NULL
 ) AS src
 PIVOT (
-    COUNT(cislo_vkladu)            
-    FOR rok IN (' + @cols + ')     
+    COUNT(cislo_vkladu)
+    FOR rok IN (' + @cols + ')
 ) AS pvt
 ';
 
@@ -134,13 +134,17 @@ SELECT
   COUNT(CASE WHEN adresa = ''Neznámá adresa'' THEN 1 END) AS [#adresa_neznama],  
   COUNT(DISTINCT okres) AS [#okresu],  
   COUNT(DISTINCT CONCAT(okres, ''-'', kat_uzemi)) AS [#kat_uzemi],  
-  COUNT(CASE WHEN nemovitost = ''budova'' THEN 1 END) AS [#budova],  
-  COUNT(CASE WHEN nemovitost = ''jednotka'' THEN 1 END) AS [#jednotka],  
-  COUNT(CASE WHEN nemovitost = ''parcela'' THEN 1 END) AS [#parcela],  
+  COUNT(CASE WHEN nemovitost = ''budova'' THEN 1 END) AS [#BUDOVA],  
+  COUNT(CASE WHEN nemovitost = ''jednotka'' THEN 1 END) AS [#JEDNOTKA],  
+  COUNT(CASE WHEN nemovitost = ''parcela'' THEN 1 END) AS [#PARCELA],  
+
+  COUNT(CASE WHEN KN_WFS_info = 1 THEN 1 END) AS [#WFS_1],
+  COUNT(CASE WHEN KN_WFS_info = 0 THEN 1 END) AS [#WFS_0],
+
   COUNT(CASE WHEN typ = ''rodinný dùm'' THEN 1 END) AS [#RD],  
   COUNT(CASE WHEN typ = ''byt'' THEN 1 END) AS [#byt],  
   COUNT(CASE WHEN typ = ''ateliér'' THEN 1 END) AS [#atelier],  
-  COUNT(CASE WHEN typ = ''garáž'' THEN 1 END) AS [#garáž]  
+  COUNT(CASE WHEN typ = ''garáž'' THEN 1 END) AS [#garáž]
 FROM [valuo].[dbo].[valuo_data]
 ';
 
@@ -163,6 +167,7 @@ CROSS JOIN PivotData p;
 -- 5. Spuštìní finálního dotazu
 -------------------------------------------------------------
 EXEC sp_executesql @finalSQL;
+
 
 
 
@@ -201,48 +206,15 @@ order by okres, kat_uzemi, rok, mesic desc;
 -- ////////////////////////////////////////      prehled po okresech, kat_uzemi, letech, mesicich
 
 
+select * from [dbo].[Valuo_data] 
+where 1=1
+      and LAT is NULL and LON is NULL
+	  and adresa <> 'Neznámá adresa'
 
 
-
-
-
-select 
-/* //////////   cela tabulka   ////////// */ 
-     * from [dbo].[Valuo_data]
-
-
-select 
-/* //////////   cela tabulka   ////////// */ 
-     * from [dbo].[Valuo_data] 
-	 where 1=1
-	       and okres = 'Hlavní mìsto Praha'
-		   --and kat_uzemi = 'Bubeneè'
-	       --and nemovitost = 'budova'
-		   and cenovy_udaj >200000000
-		
-
-
-
-SELECT adresa, LAT, LON FROM Valuo_data WHERE LAT IS NOT NULL AND LON IS NOT NULL
-SELECT id, adresa FROM Valuo_data WHERE LAT IS NULL AND LON IS NULL AND (adresa IS NOT NULL AND adresa <> 'Neznámá adresa')
-SELECT id, adresa FROM Valuo_data WHERE adresa = 'Neznámá adresa'
-
-
-select * from 
-(
-SELECT 
-    v.id,
-    v.adresa,
-    (
-        SELECT COUNT(*)
-        FROM Valuo_data AS vd
-        WHERE vd.LAT IS NOT NULL
-          AND vd.LON IS NOT NULL
-          AND vd.adresa = v.adresa
-    ) AS duplicita
-FROM Valuo_data AS v
-WHERE v.LAT IS NULL
-  AND v.LON IS NULL
-  AND v.adresa IS NOT NULL
-  AND v.adresa <> 'Neznámá adresa'
- ) as x where duplicita > 0
+ SELECT id AS id_valuo, typ, LAT, LON, adresa, popis
+    FROM Valuo_data 
+    WHERE 1=1 
+	  AND nemovitost = 'parcela'
+      AND adresa <> 'Neznámá adresa'
+      AND KN_WFS_info IS NULL
