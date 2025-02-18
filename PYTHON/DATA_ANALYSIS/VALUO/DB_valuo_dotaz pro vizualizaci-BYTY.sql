@@ -9,7 +9,8 @@ DECLARE @byt_jc_lower DECIMAL(18,2) = 50000;    -- minimální JC
 DECLARE @byt_jc_upper DECIMAL(18,2) = 250000;   -- maximální JC
 
 -- Parametr pro okres
-DECLARE @byt_okres NVARCHAR(50) = 'Hlavní mìsto Praha';
+DECLARE @byt_okres NVARCHAR(50) = '%';
+-- DECLARE @byt_okres NVARCHAR(50) = 'Hlavní mìsto Praha';
 
 ---------------------------------------------------------------------------
 -- Krok 1: Vytvoøení podmnožiny dat dle ceny a plochy
@@ -17,7 +18,7 @@ DECLARE @byt_okres NVARCHAR(50) = 'Hlavní mìsto Praha';
 WITH initial AS (
     SELECT
         cislo_vkladu,
-        MAX(CAST(listina AS VARCHAR(MAX)))         AS listina,
+        MAX(CAST(listina AS VARCHAR(MAX)))          AS listina,
         MAX(datum_podani)                           AS datum_podani,
         MAX(rok)                                    AS rok,
         MAX(mesic)                                  AS mesic,
@@ -38,7 +39,7 @@ WITH initial AS (
         MAX(cenovy_udaj)*1.0 / NULLIF(SUM(CASE WHEN typ = 'byt' THEN plocha ELSE 0 END), 0) AS JC_val
     FROM [valuo].[dbo].[valuo_data]
     WHERE typ = 'byt'
-      AND okres = @byt_okres
+      AND okres like @byt_okres
       AND LAT IS NOT NULL
       AND LON IS NOT NULL
     GROUP BY cislo_vkladu
@@ -54,6 +55,7 @@ WITH initial AS (
 -- Krok 2: Filtrace dle JC a øazení výsledkù sestupnì podle JC
 ---------------------------------------------------------------------------
 SELECT 
+    
     m.cislo_vkladu,
     m.listina,
     m.datum_podani,
@@ -93,3 +95,9 @@ FROM initial m
 -- Filtrace dle JC na základì vypoètené hodnoty bez zaokrouhlení
 WHERE m.JC_val BETWEEN @byt_jc_lower AND @byt_jc_upper
 ORDER BY m.JC_val DESC;
+
+
+
+
+
+

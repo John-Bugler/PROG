@@ -55,4 +55,4 @@
         LEFT JOIN ParcelCounts AS PC
             ON PC.cislo_vkladu = V.cislo_vkladu
         WHERE 1 = 1
-            and v.kat_uzemi in ('Malešice', 'Štìrboholy', 'Kyje')  
+            --and v.kat_uzemi in ('Malešice', 'Štìrboholy', 'Kyje')  
