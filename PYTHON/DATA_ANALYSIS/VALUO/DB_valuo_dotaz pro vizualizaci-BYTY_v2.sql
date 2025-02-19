@@ -1,3 +1,5 @@
+
+
 WITH ValidValuo AS (
     SELECT *
     FROM dbo.Valuo_data
@@ -42,4 +44,5 @@ LEFT JOIN dbo.KN_parcel_data AS K
     ON K.id_valuo = V.id
 WHERE 1 = 1
   AND V.plocha <> 0
-  AND V.cenovy_udaj <> 0;
+  AND V.cenovy_udaj <> 0
+  and cislo_vkladu = 'V-11359/2024-101'
