@@ -1,4 +1,6 @@
-﻿-- Intervaly pro typ 'byt'
+﻿/*DOTAZ POUŽÍVANÝ PRO VIZUALIZACI A ANALÝZU V EXCELU*/
+
+-- Intervaly pro typ 'byt'
 DECLARE @byt_price_lower INT = 500000;
 DECLARE @byt_price_upper INT = 40000000;
 DECLARE @byt_area_lower DECIMAL(10,2) = 15;
