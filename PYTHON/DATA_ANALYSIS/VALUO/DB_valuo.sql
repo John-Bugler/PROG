@@ -170,9 +170,6 @@ EXEC sp_executesql @finalSQL;
 
 
 
-
-
-
 select 
 -- ////////////////////////////////////////      prehled po okresech, kat_uzemi, letech, mesicich
      okres,
@@ -197,6 +194,8 @@ select
      count(case when nemovitost = 'jednotka' then 1 end) as [jednotka],  -- poèet jednotek
      count(case when nemovitost = 'parcela' then 1 end) as [parcela]  -- poèet parcel
 from [valuo].[dbo].[valuo_data] vd
+where 1=1
+      and kat_uzemi = 'Liboc'
 group by
      okres,
      kat_uzemi,
@@ -206,15 +205,80 @@ order by okres, kat_uzemi, rok, mesic desc;
 -- ////////////////////////////////////////      prehled po okresech, kat_uzemi, letech, mesicich
 
 
-select * from [dbo].[Valuo_data] 
+
+
+
+--  ///////////////////////////////////////      POZEMKY / JC        ///////////////////////////////////////
+
+
+DECLARE @KU NVARCHAR(MAX) = 'Veleslavín,Liboc';
+
+WITH AgregovanaData AS (
+  SELECT 
+    cislo_vkladu,
+    COUNT(*) AS [#PARCEL],
+    SUM(plocha) AS [#CELKOVA_VYMERA],
+    MIN(cenovy_udaj) AS cenovy_udaj  -- pøedpokládáme, že cenovy_udaj je u všech stejný
+  FROM [valuo].[dbo].[Valuo_data]
+  WHERE 
+    kat_uzemi IN (
+      SELECT LTRIM(RTRIM(value))
+      FROM STRING_SPLIT(@KU, ',')
+    )
+    AND cislo_vkladu IN (
+      SELECT cislo_vkladu
+      FROM [valuo].[dbo].[Valuo_data]
+      WHERE 
+        kat_uzemi IN (
+          SELECT LTRIM(RTRIM(value))
+          FROM STRING_SPLIT(@KU, ',')
+        )
+      GROUP BY cislo_vkladu
+      HAVING COUNT(*) = SUM(CASE WHEN nemovitost = 'parcela' THEN 1 ELSE 0 END)
+    )
+  GROUP BY cislo_vkladu
+)
+SELECT 
+  vd.*,
+  kn.parcel_number,
+  kn.kat_uzemi AS kn_kat_uzemi,
+  kn.zoning_title,
+  ad.[#PARCEL],
+  ad.[#CELKOVA_VYMERA],
+  CONVERT(DECIMAL(10,1), ROUND((ad.cenovy_udaj / NULLIF(ad.[#CELKOVA_VYMERA], 0)), 1, 1)) AS [#JC]
+FROM [valuo].[dbo].[Valuo_data] vd
+JOIN AgregovanaData ad ON vd.cislo_vkladu = ad.cislo_vkladu
+LEFT JOIN [valuo].[dbo].[KN_parcel_data] kn ON vd.id = kn.id_valuo
+WHERE 
+  vd.kat_uzemi IN (
+    SELECT LTRIM(RTRIM(value))
+    FROM STRING_SPLIT(@KU, ',')
+  )
+ORDER BY [#JC] DESC;
+
+
+--  ///////////////////////////////////////      POZEMKY / JC        ///////////////////////////////////////
+
+
+
+
+
+--select * from [dbo].[KN_parcel_data]
+
+/*
+select * from [valuo].[dbo].[Valuo_data] 
 where 1=1
       and LAT is NULL and LON is NULL
 	  and adresa <> 'Neznámá adresa'
 
+*/
 
+/*
  SELECT id AS id_valuo, typ, LAT, LON, adresa, popis
-    FROM Valuo_data 
+    FROM [valuo].[dbo].[Valuo_data] 
     WHERE 1=1 
 	  AND nemovitost = 'parcela'
       AND adresa <> 'Neznámá adresa'
       AND KN_WFS_info IS NULL
+
+*/
