@@ -58,7 +58,7 @@ def convert_all_pdfs_in_folder(folder_path):
             insert_pdf_pages_as_images(pdf_file, docx_file)  # Prevede PDF do DOCX jako obrazek/stranka
 
 # Cesta ke složce s PDF soubory
-folder_path = r"C:\Users\ijttr\OneDrive\Dokumenty\OCEŇOVÁNÍ\_IJK\FMP SICAV\2024\LV"
+folder_path = r"C:\Users\ijttr\OneDrive\Dokumenty\OCEŇOVÁNÍ\_IJK\028636-2025 - POZ - Praha 9 - Horní Počernice - KONHEFR\1"
 
 # Funkce pro konverzi všech PDF souborů ve složce
 convert_all_pdfs_in_folder(folder_path)
