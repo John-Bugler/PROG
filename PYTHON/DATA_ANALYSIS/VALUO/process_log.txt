@@ -270,3 +270,547 @@
 
 [5 rows x 45 columns]
 2025-04-10 18:58:03,427 - INFO - Interaktivní mapa byla uložena do souboru 'DATA_POZEMKY_BYTY_GABI_2.html'.
+2025-04-10 18:59:19,207 - INFO - Načtených záznamů z KN_parcel_data:
+2025-04-10 18:59:19,207 - INFO - Načtených záznamů z KN_parcel_data:
+2025-04-10 18:59:19,209 - INFO -       id           timestamp      cislo_vkladu        datum_podani  \
+0  18218 2025-02-03 19:18:12     V-10/2023-101 2023-01-02 08:58:57   
+1   9248 2025-02-03 16:28:22  V-10027/2023-211 2023-12-21 11:54:17   
+2   9249 2025-02-03 16:28:22  V-10027/2023-211 2023-12-21 11:54:17   
+3   9250 2025-02-03 16:28:22  V-10027/2023-211 2023-12-21 11:54:17   
+4    311 2025-02-02 21:28:19  V-10115/2024-405 2024-10-16 13:44:45   
+
+      datum_zplatneni        listina nemovitost                   typ  \
+0 2023-01-24 13:58:23  Smlouva kupní    parcela           jiná plocha   
+1 2024-01-25 12:28:43  Smlouva kupní    parcela             orná půda   
+2 2024-01-25 12:28:43  Smlouva kupní    parcela  trvalý travní porost   
+3 2024-01-25 12:28:43  Smlouva kupní    parcela               zahrada   
+4 2024-11-12 14:51:12  Smlouva kupní    parcela               zahrada   
+
+                     adresa  cenovy_udaj  ... refPoint_lon  refPoint_lat  \
+0          Záběhlice 2848/1   16750000.0  ...    14.496104     50.046773   
+1            Strýčkovy 1595     127868.0  ...    13.923549     49.612933   
+2             Třeboc 1006/1     127868.0  ...    13.757919     50.220405   
+3  Kněževes u Rakovníka 326     127868.0  ...    13.647779     50.144650   
+4             Plzeň 10831/1     950000.0  ...    13.364066     49.759244   
+
+  validFrom                            administrativeUnit_href  \
+0      None  http://services.cuzk.cz/wfs/inspire-au-wfs.asp...   
+1      None  http://services.cuzk.cz/wfs/inspire-au-wfs.asp...   
+2      None  http://services.cuzk.cz/wfs/inspire-au-wfs.asp...   
+3      None  http://services.cuzk.cz/wfs/inspire-au-wfs.asp...   
+4      None  http://services.cuzk.cz/wfs/inspire-au-wfs.asp...   
+
+  administrativeUnit_title                                        zoning_href  \
+0                Záběhlice  http://services.cuzk.cz/wfs/inspire-cp-wfs.asp...   
+1                Strýčkovy  http://services.cuzk.cz/wfs/inspire-cp-wfs.asp...   
+2                   Třeboc  http://services.cuzk.cz/wfs/inspire-cp-wfs.asp...   
+3     Kněževes u Rakovníka  http://services.cuzk.cz/wfs/inspire-cp-wfs.asp...   
+4                    Plzeň  http://services.cuzk.cz/wfs/inspire-cp-wfs.asp...   
+
+             zoning_title  id_valuo      JC  #PARCEL  
+0                   Praha   18218.0  3488.0        1  
+1  Rožmitál pod Třemšínem    9248.0    11.0        3  
+2                  Třeboc    9249.0    11.0        3  
+3                Kněževes    9250.0    11.0        3  
+4                   Plzeň     311.0   620.0        2  
+
+[5 rows x 46 columns]
+2025-04-10 18:59:19,209 - INFO -       id           timestamp      cislo_vkladu        datum_podani  \
+0  18218 2025-02-03 19:18:12     V-10/2023-101 2023-01-02 08:58:57   
+1   9248 2025-02-03 16:28:22  V-10027/2023-211 2023-12-21 11:54:17   
+2   9249 2025-02-03 16:28:22  V-10027/2023-211 2023-12-21 11:54:17   
+3   9250 2025-02-03 16:28:22  V-10027/2023-211 2023-12-21 11:54:17   
+4    311 2025-02-02 21:28:19  V-10115/2024-405 2024-10-16 13:44:45   
+
+      datum_zplatneni        listina nemovitost                   typ  \
+0 2023-01-24 13:58:23  Smlouva kupní    parcela           jiná plocha   
+1 2024-01-25 12:28:43  Smlouva kupní    parcela             orná půda   
+2 2024-01-25 12:28:43  Smlouva kupní    parcela  trvalý travní porost   
+3 2024-01-25 12:28:43  Smlouva kupní    parcela               zahrada   
+4 2024-11-12 14:51:12  Smlouva kupní    parcela               zahrada   
+
+                     adresa  cenovy_udaj  ... refPoint_lon  refPoint_lat  \
+0          Záběhlice 2848/1   16750000.0  ...    14.496104     50.046773   
+1            Strýčkovy 1595     127868.0  ...    13.923549     49.612933   
+2             Třeboc 1006/1     127868.0  ...    13.757919     50.220405   
+3  Kněževes u Rakovníka 326     127868.0  ...    13.647779     50.144650   
+4             Plzeň 10831/1     950000.0  ...    13.364066     49.759244   
+
+  validFrom                            administrativeUnit_href  \
+0      None  http://services.cuzk.cz/wfs/inspire-au-wfs.asp...   
+1      None  http://services.cuzk.cz/wfs/inspire-au-wfs.asp...   
+2      None  http://services.cuzk.cz/wfs/inspire-au-wfs.asp...   
+3      None  http://services.cuzk.cz/wfs/inspire-au-wfs.asp...   
+4      None  http://services.cuzk.cz/wfs/inspire-au-wfs.asp...   
+
+  administrativeUnit_title                                        zoning_href  \
+0                Záběhlice  http://services.cuzk.cz/wfs/inspire-cp-wfs.asp...   
+1                Strýčkovy  http://services.cuzk.cz/wfs/inspire-cp-wfs.asp...   
+2                   Třeboc  http://services.cuzk.cz/wfs/inspire-cp-wfs.asp...   
+3     Kněževes u Rakovníka  http://services.cuzk.cz/wfs/inspire-cp-wfs.asp...   
+4                    Plzeň  http://services.cuzk.cz/wfs/inspire-cp-wfs.asp...   
+
+             zoning_title  id_valuo      JC  #PARCEL  
+0                   Praha   18218.0  3488.0        1  
+1  Rožmitál pod Třemšínem    9248.0    11.0        3  
+2                  Třeboc    9249.0    11.0        3  
+3                Kněževes    9250.0    11.0        3  
+4                   Plzeň     311.0   620.0        2  
+
+[5 rows x 46 columns]
+2025-04-10 18:59:19,229 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,229 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,231 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,231 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,232 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,232 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,233 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,233 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,234 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,234 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,235 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,235 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,236 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,236 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,241 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,241 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,242 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,242 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,243 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,243 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,245 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,245 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,250 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,250 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,252 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,252 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,254 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,254 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,261 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,261 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,264 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,264 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,265 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,265 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,266 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,266 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,268 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,268 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,269 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,269 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,270 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,270 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,272 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,272 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,272 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,272 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,273 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,273 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,280 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,280 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,283 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,283 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,285 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,285 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,286 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,286 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,288 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,288 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,289 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,289 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,292 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,292 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,293 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,293 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,295 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,295 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,295 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,295 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,296 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,296 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,297 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,297 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,299 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,299 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,300 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,300 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,301 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,301 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,304 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,304 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,305 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,305 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,305 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,305 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,306 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,306 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,307 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,307 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,308 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,308 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,311 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,311 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,312 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,312 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,312 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,312 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,313 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,313 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,313 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,313 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,314 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,314 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,315 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,315 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,315 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,315 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,316 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,316 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,316 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,316 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,317 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,317 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,318 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,318 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,318 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,318 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,319 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,319 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,320 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,320 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,320 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,320 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,321 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,321 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,322 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,322 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,322 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,322 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,324 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,324 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,326 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,326 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,331 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,331 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,333 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,333 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,334 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,334 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,335 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,335 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,335 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,335 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,336 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,336 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,337 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,337 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,338 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,338 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,339 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,339 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,340 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,340 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,340 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,340 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,341 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,341 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,341 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,341 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,343 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,343 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,343 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,343 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,344 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,344 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,347 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,347 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,350 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,350 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,352 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,352 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,352 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,352 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,356 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,356 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,357 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,357 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,358 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,358 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,359 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,359 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,362 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,362 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,364 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,364 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,366 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,366 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,366 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,366 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,367 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,367 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,368 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,368 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,368 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,368 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,375 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,375 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,376 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,376 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,378 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,378 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,383 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,383 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,389 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,389 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,390 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,390 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,390 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,390 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,392 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,392 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,393 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,393 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,394 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,394 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,395 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,395 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,396 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,396 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,397 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,397 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,403 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,403 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,404 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,404 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,405 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,405 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,405 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,405 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,406 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,406 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,407 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,407 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,408 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,408 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,409 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,409 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,409 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,409 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,410 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,410 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,411 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,411 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,411 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,411 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,412 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,412 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,412 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,412 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,413 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,413 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,415 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,415 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,415 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,415 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,416 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,416 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,417 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,417 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,417 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,417 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,418 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,418 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,419 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,419 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,420 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,420 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,421 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,421 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,421 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,421 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,423 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,423 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,424 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,424 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,424 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,424 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,425 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,425 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,426 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,426 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,427 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,427 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,428 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,428 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,434 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,434 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,437 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,437 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,439 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,439 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,441 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,441 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,446 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,446 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,448 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,448 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,449 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,449 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,450 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,450 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,451 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,451 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,454 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,454 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,455 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,455 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,457 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,457 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,461 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,461 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,463 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,463 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,465 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,465 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,466 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,466 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,467 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,467 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,469 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,469 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,469 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,469 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,470 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,470 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,473 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,473 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,474 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,474 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,475 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,475 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,476 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,476 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,476 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,476 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,477 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,477 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,478 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,478 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,480 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,480 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,481 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,481 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,482 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,482 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,484 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,484 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,485 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,485 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,488 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,488 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,489 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:19,489 - ERROR - Chyba při převodu geometrie: 'NoneType' object has no attribute 'split'
+2025-04-10 18:59:21,599 - INFO - Načtených záznamů z KN_bytu_data:
+2025-04-10 18:59:21,599 - INFO - Načtených záznamů z KN_bytu_data:
+2025-04-10 18:59:21,600 - INFO -       id           timestamp      cislo_vkladu        datum_podani  \
+0  11178 2025-02-03 16:28:33  V-10099/2024-101 2024-02-20 13:26:33   
+1  11120 2025-02-03 16:28:32  V-10784/2024-101 2024-02-23 09:31:04   
+2   8981 2025-02-03 16:28:21   V-1091/2024-101 2024-01-08 15:08:47   
+3  10346 2025-02-03 16:28:28   V-1092/2024-101 2024-01-08 15:09:48   
+4   8980 2025-02-03 16:28:21   V-1093/2024-101 2024-01-08 15:11:14   
+
+      datum_zplatneni        listina nemovitost  typ  \
+0 2024-03-13 17:38:18  Smlouva kupní   jednotka  byt   
+1 2024-03-20 15:01:32  Smlouva kupní   jednotka  byt   
+2 2024-01-30 12:57:33  Smlouva kupní   jednotka  byt   
+3 2024-02-19 11:26:40  Smlouva kupní   jednotka  byt   
+4 2024-01-30 12:57:15  Smlouva kupní   jednotka  byt   
+
+                                         adresa  cenovy_udaj  ...  \
+0  Mukařovského 3121/4, Stodůlky, 15500 Praha 5    4909821.0  ...   
+1                                 Stodůlky 2789    6180000.0  ...   
+2  Mukařovského 3121/4, Stodůlky, 15500 Praha 5    5813130.0  ...   
+3  Mukařovského 3121/4, Stodůlky, 15500 Praha 5    7919861.0  ...   
+4  Mukařovského 3121/4, Stodůlky, 15500 Praha 5    7095299.0  ...   
+
+  refPoint_lon  refPoint_lat validFrom  \
+0    14.324025     50.044481      None   
+1    14.344412     50.053894      None   
+2    14.324025     50.044481      None   
+3    14.324025     50.044481      None   
+4    14.324025     50.044481      None   
+
+                             administrativeUnit_href administrativeUnit_title  \
+0  http://services.cuzk.cz/wfs/inspire-au-wfs.asp...                 Stodůlky   
+1  http://services.cuzk.cz/wfs/inspire-au-wfs.asp...                 Stodůlky   
+2  http://services.cuzk.cz/wfs/inspire-au-wfs.asp...                 Stodůlky   
+3  http://services.cuzk.cz/wfs/inspire-au-wfs.asp...                 Stodůlky   
+4  http://services.cuzk.cz/wfs/inspire-au-wfs.asp...                 Stodůlky   
+
+                                         zoning_href  zoning_title  id_valuo  \
+0  http://services.cuzk.cz/wfs/inspire-cp-wfs.asp...         Praha     11178   
+1  http://services.cuzk.cz/wfs/inspire-cp-wfs.asp...         Praha     11120   
+2  http://services.cuzk.cz/wfs/inspire-cp-wfs.asp...         Praha      8981   
+3  http://services.cuzk.cz/wfs/inspire-cp-wfs.asp...         Praha     10346   
+4  http://services.cuzk.cz/wfs/inspire-cp-wfs.asp...         Praha      8980   
+
+   kn_kat_uzemi        JC  
+0      Stodůlky  119752.0  
+1      Stodůlky   84542.0  
+2      Stodůlky   98361.0  
+3      Stodůlky   94172.0  
+4      Stodůlky  116891.0  
+
+[5 rows x 45 columns]
+2025-04-10 18:59:21,600 - INFO -       id           timestamp      cislo_vkladu        datum_podani  \
+0  11178 2025-02-03 16:28:33  V-10099/2024-101 2024-02-20 13:26:33   
+1  11120 2025-02-03 16:28:32  V-10784/2024-101 2024-02-23 09:31:04   
+2   8981 2025-02-03 16:28:21   V-1091/2024-101 2024-01-08 15:08:47   
+3  10346 2025-02-03 16:28:28   V-1092/2024-101 2024-01-08 15:09:48   
+4   8980 2025-02-03 16:28:21   V-1093/2024-101 2024-01-08 15:11:14   
+
+      datum_zplatneni        listina nemovitost  typ  \
+0 2024-03-13 17:38:18  Smlouva kupní   jednotka  byt   
+1 2024-03-20 15:01:32  Smlouva kupní   jednotka  byt   
+2 2024-01-30 12:57:33  Smlouva kupní   jednotka  byt   
+3 2024-02-19 11:26:40  Smlouva kupní   jednotka  byt   
+4 2024-01-30 12:57:15  Smlouva kupní   jednotka  byt   
+
+                                         adresa  cenovy_udaj  ...  \
+0  Mukařovského 3121/4, Stodůlky, 15500 Praha 5    4909821.0  ...   
+1                                 Stodůlky 2789    6180000.0  ...   
+2  Mukařovského 3121/4, Stodůlky, 15500 Praha 5    5813130.0  ...   
+3  Mukařovského 3121/4, Stodůlky, 15500 Praha 5    7919861.0  ...   
+4  Mukařovského 3121/4, Stodůlky, 15500 Praha 5    7095299.0  ...   
+
+  refPoint_lon  refPoint_lat validFrom  \
+0    14.324025     50.044481      None   
+1    14.344412     50.053894      None   
+2    14.324025     50.044481      None   
+3    14.324025     50.044481      None   
+4    14.324025     50.044481      None   
+
+                             administrativeUnit_href administrativeUnit_title  \
+0  http://services.cuzk.cz/wfs/inspire-au-wfs.asp...                 Stodůlky   
+1  http://services.cuzk.cz/wfs/inspire-au-wfs.asp...                 Stodůlky   
+2  http://services.cuzk.cz/wfs/inspire-au-wfs.asp...                 Stodůlky   
+3  http://services.cuzk.cz/wfs/inspire-au-wfs.asp...                 Stodůlky   
+4  http://services.cuzk.cz/wfs/inspire-au-wfs.asp...                 Stodůlky   
+
+                                         zoning_href  zoning_title  id_valuo  \
+0  http://services.cuzk.cz/wfs/inspire-cp-wfs.asp...         Praha     11178   
+1  http://services.cuzk.cz/wfs/inspire-cp-wfs.asp...         Praha     11120   
+2  http://services.cuzk.cz/wfs/inspire-cp-wfs.asp...         Praha      8981   
+3  http://services.cuzk.cz/wfs/inspire-cp-wfs.asp...         Praha     10346   
+4  http://services.cuzk.cz/wfs/inspire-cp-wfs.asp...         Praha      8980   
+
+   kn_kat_uzemi        JC  
+0      Stodůlky  119752.0  
+1      Stodůlky   84542.0  
+2      Stodůlky   98361.0  
+3      Stodůlky   94172.0  
+4      Stodůlky  116891.0  
+
+[5 rows x 45 columns]
+2025-04-10 18:59:23,321 - INFO - Interaktivní mapa byla uložena do souboru 'DATA_POZEMKY_BYTY_GABI_2.html'.
+2025-04-10 18:59:23,321 - INFO - Interaktivní mapa byla uložena do souboru 'DATA_POZEMKY_BYTY_GABI_2.html'.
