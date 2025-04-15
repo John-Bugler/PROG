@@ -39,6 +39,7 @@ class StockData(models.Model):
                                         type,
                                         (case when type = 'buy - market' then quantity
                                             when type = 'sell - market' then -quantity
+                                            when type = 'sell - stop' then -quantity			  
                                             when type = 'stock split' then quantity
                                             else 0
                                         end) as quantity,
@@ -46,6 +47,7 @@ class StockData(models.Model):
                                         price,
                                         (case when type = 'buy - market' then amount
                                             when type = 'sell - market' then -amount
+                                            when type = 'sell - stop' then -quantity
                                             when type = 'dividend' then amount
 
                                             else 0
@@ -53,7 +55,7 @@ class StockData(models.Model):
                                         row_number() over (partition by ticker order by [date]) as rn
                                     from [reports].[dbo].[revolut_stocks]
                                     where ticker <> ''
-                                        and type in ('buy - market', 'sell - market', 'stock split', 'dividend')
+                                        and type in ('buy - market', 'sell - market', 'sell - stop', 'stock split', 'dividend')
                                         --and year([date]) = '2024'
                                         and [date] between '2021-01-01' and getdate()  -- za cele obdobi po soucasnost
                                         --and ticker like 'amzn'
@@ -75,7 +77,7 @@ class StockData(models.Model):
                                         sum(quantity) over (partition by ticker) as cumulative_quantity,
                                         row_number() over (partition by ticker order by (select null)) as rn
                                     from purchaseandsplits
-                                    where type in ('buy - market', 'sell - market', 'stock split')
+                                    where type in ('buy - market', 'sell - market', 'sell - stop', 'stock split')
                                 ),
 
                                 cumulativetrades as (
@@ -135,7 +137,7 @@ class StockData(models.Model):
                                         sum(amount) over (partition by ticker) as cumulative_amount,  
                                         row_number() over (partition by ticker order by (select null)) as rn
                                     from purchaseandsplits
-                                    where type = 'sell - market'
+                                    where type = 'sell - market' or type = 'sell - stop'
                                 ),
 
                                 cumulativefees as (
@@ -148,7 +150,7 @@ class StockData(models.Model):
                                             end) over (partition by ticker order by date) as cumulative_fee,
                                         row_number() over (partition by ticker order by date desc) as rn
                                     from purchaseandsplits
-                                    where type = 'buy - market' or type = 'sell - market'
+                                    where type = 'buy - market' or type = 'sell - market' or type = 'sell - stop'
                                 ),
 
                                 /*
@@ -239,6 +241,7 @@ class StockData(models.Model):
                                     and p.rn = 1
                                 --and p.ticker = 'nvda'
                                 order by ticker asc;
+
 
 
             ''')
