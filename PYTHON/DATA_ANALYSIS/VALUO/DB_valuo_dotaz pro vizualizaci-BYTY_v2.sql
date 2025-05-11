@@ -46,4 +46,4 @@ WHERE 1 = 1
   AND V.plocha <> 0
   AND V.cenovy_udaj <> 0
   --AND cislo_vkladu = 'V-11359/2024-101'
-  AND V.kat_uzemi = 'Stodùlky'
+  AND V.kat_uzemi = 'Holešovice'
