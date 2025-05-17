@@ -238,6 +238,8 @@ WITH AgregovanaData AS (
     )
   GROUP BY cislo_vkladu
 )
+
+
 SELECT 
   vd.*,
   kn.parcel_number,
@@ -255,6 +257,11 @@ WHERE
     FROM STRING_SPLIT(@KU, ',')
   )
 ORDER BY [#JC] DESC;
+
+
+select * from [dbo].[KN_parcel_data]
+
+select * from [dbo].[Valuo_data]
 
 
 --  ///////////////////////////////////////      POZEMKY / JC        ///////////////////////////////////////
