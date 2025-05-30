@@ -295,18 +295,20 @@ where 1=1
 select * from [valuo].[dbo].[Valuo_data] 
 where 1=1
       
-	  and cislo_vkladu = 'V-69890/2024-101'
+	  and cislo_vkladu = 'V-7974/2024-101'
 
 
 	  select * from [valuo].[dbo].[KN_parcel_data]
 where 1=1
-      and id_valuo = 35964
+      and id_valuo = 20783
 
 
 UPDATE [valuo].[dbo].[Valuo_data]
 SET
-    LAT = 50.0460758,         -- nová hodnota LAT
-    LON = 14.3296703,          -- nová hodnota LON
-	adresa = 'Bronzová 2018/17'
+    --LAT = 50.0460758,         -- nová hodnota LAT
+    --LON = 14.3296703,          -- nová hodnota LON
+	--adresa = 'Bronzová 2018/17'
+	--plocha = 216.0
+	cenovy_udaj = 7750000
 WHERE
-    Id = 35964;             -- identifikátor øádku, který chcete upravit
+    Id = 11269;             -- identifikátor øádku, který chcete upravit
