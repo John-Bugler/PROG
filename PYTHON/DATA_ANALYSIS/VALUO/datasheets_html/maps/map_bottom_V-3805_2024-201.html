@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_d2cec974bd19e089e0812819227e102b {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_d2cec974bd19e089e0812819227e102b" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_d2cec974bd19e089e0812819227e102b = L.map(
+                "map_d2cec974bd19e089e0812819227e102b",
+                {
+                    center: [49.87381888931677, 14.669200682764565],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 15,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_d2cec974bd19e089e0812819227e102b);
+
+            
+
+        
+    
+            var tile_layer_8e5140d9e5003d41dd18ff495a7a8db9 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u00a9 OpenStreetMap contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            var tile_layer_17cc8f692c073c200d1eef5070f5aeb4 = L.tileLayer(
+                "https://ags.cuzk.gov.cz/arcgis1/rest/services/ORTOFOTO_WM/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "\u00a9 \u010c\u00daZK",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            var tile_layer_00a9d8e090c813603368fac6478ba40f = L.tileLayer(
+                "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "Esri World Imagery",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            var tile_layer_e6d8591a884f9cf103154c0fbf4f54b1 = L.tileLayer(
+                "https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "\u00a9 OpenStreetMap contributors \u00a9 CARTO",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            var tile_layer_e1a27a7d9566feeb6e2782638a65e185 = L.tileLayer(
+                "https://cartodb-basemaps-a.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "\u00a9 OpenStreetMap contributors \u00a9 CARTO",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            var macro_element_2646db32661fd104b7606d2073d10bd6 = L.tileLayer.wms(
+                "https://services.cuzk.gov.cz/wms/local-km-wms.asp?",
+                {"attribution": "\u00a9 \u010c\u00daZK", "format": "image/png", "layers": "KN", "maxZoom": 30, "minZoom": 0, "styles": "", "transparent": true, "version": "1.3.0"}
+            );
+        
+    
+            var macro_element_ecde705c6706df79445ff0780607bf7f = L.tileLayer.wms(
+                "https://services.cuzk.gov.cz/wms/local-km-wms.asp?",
+                {"attribution": "\u00a9 \u010c\u00daZK", "format": "image/png", "layers": "parcelni_cisla", "maxZoom": 30, "minZoom": 0, "styles": "", "transparent": true, "version": "1.3.0"}
+            );
+        
+    
+            var feature_group_c4ba4e54a7660a9cd9bb9e25e961f1ff = L.featureGroup(
+                {
+}
+            );
+        
+    
+                var DynamicLayer = L.TileLayer.extend({
+                    getTileUrl: function(coords) {
+                        var tileSize = 256;
+                        var initialResolution = 2 * Math.PI * 6378137 / tileSize;
+                        var originShift = 2 * Math.PI * 6378137 / 2.0;
+                        var resolution = initialResolution / Math.pow(2, coords.z);
+                        var minx = coords.x * tileSize * resolution - originShift;
+                        var maxx = (coords.x + 1) * tileSize * resolution - originShift;
+                        var miny = originShift - (coords.y + 1) * tileSize * resolution;
+                        var maxy = originShift - coords.y * tileSize * resolution;
+                        var bbox = [minx, miny, maxx, maxy].join(",");
+                        return "https://gs-pub.praha.eu/arcgis/rest/services/pup/uzemni_plan_platny/MapServer/export?bbox=" + bbox +
+                               "&bboxSR=102100&imageSR=102100&size=256,256" +
+                               "&format=png32&transparent=true&layers=show:0&f=image";
+                    }
+                });
+                var dynamicLayer = new DynamicLayer();
+                dynamicLayer.addTo(feature_group_c4ba4e54a7660a9cd9bb9e25e961f1ff);
+            
+    
+            feature_group_c4ba4e54a7660a9cd9bb9e25e961f1ff.addTo(map_d2cec974bd19e089e0812819227e102b);
+        
+    
+        function geo_json_5f40c7c5bac19f52a9bdb5855ab944be_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "blue", "fill": true, "weight": 5};
+            }
+        }
+
+        function geo_json_5f40c7c5bac19f52a9bdb5855ab944be_onEachFeature(feature, layer) {
+            layer.on({
+            });
+        };
+        var geo_json_5f40c7c5bac19f52a9bdb5855ab944be = L.geoJson(null, {
+                onEachFeature: geo_json_5f40c7c5bac19f52a9bdb5855ab944be_onEachFeature,
+            
+                style: geo_json_5f40c7c5bac19f52a9bdb5855ab944be_styler,
+            ...{
+}
+        });
+
+        function geo_json_5f40c7c5bac19f52a9bdb5855ab944be_add (data) {
+            geo_json_5f40c7c5bac19f52a9bdb5855ab944be
+                .addData(data);
+        }
+            geo_json_5f40c7c5bac19f52a9bdb5855ab944be_add({"bbox": [14.668808674834702, 49.873633294097345, 14.669576983617377, 49.87399394856566], "features": [{"bbox": [14.668808674834702, 49.873633294097345, 14.669576983617377, 49.87399394856566], "geometry": {"coordinates": [[[14.669576983617377, 49.87389706705646], [14.66909375880923, 49.87399394856566], [14.668808674834702, 49.87376273204071], [14.669318172723907, 49.873633294097345], [14.669576983617377, 49.87389706705646]]], "type": "Polygon"}, "id": "43", "properties": {}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_5f40c7c5bac19f52a9bdb5855ab944be.addTo(map_d2cec974bd19e089e0812819227e102b);
+        
+    
+            map_d2cec974bd19e089e0812819227e102b.fitBounds(
+                [[49.873633294097345, 14.668808674834702], [49.87399394856566, 14.669576983617377]],
+                {}
+            );
+        
+    
+            var layer_control_3ad3f99b6d304894c62b01a5557f6298_layers = {
+                base_layers : {
+                    "OpenStreetMap" : tile_layer_8e5140d9e5003d41dd18ff495a7a8db9,
+                    "Ortofotomapa \u010c\u00daZK" : tile_layer_17cc8f692c073c200d1eef5070f5aeb4,
+                    "Ortofotomapa ESRI" : tile_layer_00a9d8e090c813603368fac6478ba40f,
+                    "CartoDB LIGHT" : tile_layer_e6d8591a884f9cf103154c0fbf4f54b1,
+                    "CartoDB DARK" : tile_layer_e1a27a7d9566feeb6e2782638a65e185,
+                },
+                overlays :  {
+                    "Katastr\u00e1ln\u00ed mapa (KN)" : macro_element_2646db32661fd104b7606d2073d10bd6,
+                    "Parceln\u00ed \u010d\u00edsla" : macro_element_ecde705c6706df79445ff0780607bf7f,
+                    "\u00dazemn\u00ed pl\u00e1n Prahy \u2013 pl\u00e1n vyu\u017eit\u00ed" : feature_group_c4ba4e54a7660a9cd9bb9e25e961f1ff,
+                    "Parcely (modr\u00e9 hranice)" : geo_json_5f40c7c5bac19f52a9bdb5855ab944be,
+                },
+            };
+            let layer_control_3ad3f99b6d304894c62b01a5557f6298 = L.control.layers(
+                layer_control_3ad3f99b6d304894c62b01a5557f6298_layers.base_layers,
+                layer_control_3ad3f99b6d304894c62b01a5557f6298_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": false,
+  "autoZIndex": true,
+}
+            ).addTo(map_d2cec974bd19e089e0812819227e102b);
+
+        
+</script>
+</html>
