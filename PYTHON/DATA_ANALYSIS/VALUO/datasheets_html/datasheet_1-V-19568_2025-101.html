@@ -1,0 +1,118 @@
+
+    <!DOCTYPE html>
+    <html lang="cs">
+    <head>
+      <meta charset="UTF-8" />
+      <title>Datasheet V-19568/2025-101</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+        }
+        .container {
+          display: flex;
+          flex-direction: row;
+          width: 100vw;
+          height: 100vh;
+        }
+        .left-panel {
+          width: 50%;
+          padding: 20px;
+          box-sizing: border-box;
+          overflow-y: auto;
+        }
+        .right-panel {
+          width: 50%;
+          display: flex;
+          flex-direction: column;
+          position: relative;
+        }
+        .info-item {
+          margin-bottom: 8px;
+        }
+        h2 {
+          margin-top: 0;
+          font-size: 1.4em;
+        }
+        table {
+          border-collapse: collapse;
+          width: 100%;
+          margin-top: 20px;
+        }
+        table, th, td {
+          border: 1px solid #333;
+        }
+        th, td {
+          padding: 6px 8px;
+          text-align: center;
+        }
+        th {
+          background-color: #f2f2f2;
+        }
+        .iframe-container {
+          width: 100%;
+          border: none;
+        }
+        .iframe-top {
+          flex: 1;
+        }
+        .iframe-bottom {
+          flex: 1;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="left-panel">
+          <!-- NÁZEV NADPISU: ID + ČÍSLO VKLADU -->
+          <h2>Datasheet – ID: 1 | Číslo vkladu: V-19568/2025-101</h2>
+
+          <!-- BLOK 1: DATUM PODÁNÍ -->
+          <div class="info-item"><strong>Datum podání:</strong> 28.03.2025 11:50:59</div>
+          <div class="info-item"><strong>Rok / Měsíc:</strong> 2025/4</div>
+          <div style="height:12px;"></div>  <!-- mezera -->
+
+          <!-- BLOK 2: POČET A PLOCHA -->
+          <div class="info-item"><strong>Počet pozemků v rámci řízení:</strong> 5</div>
+          <div class="info-item"><strong style="color: green;">Celková plocha pozemků v rámci řízení (m²):<b> 9 833</b></strong></div>
+          <div style="height:12px;"></div>  <!-- mezera -->
+
+          <!-- BLOK 3: CENOVÝ ÚDAJ -->
+          <div class="info-item"><strong style="color: blue;">Cenový údaj (Kč):<b> 54 000 000</b></strong></div>
+          <div style="height:12px;"></div>  <!-- mezera -->
+
+          <!-- BLOK 4: LOKALIZAČNÍ ÚDAJE -->
+          <div class="info-item"><strong>Okres:</strong> Hlavní město Praha</div>
+          <div class="info-item"><strong>Kat.území:</strong> Kunratice</div>
+          <div class="info-item"><strong>Kód kat.území:</strong> 728314</div>
+          <div class="info-item"><strong>Lokalita (administrativeUnit):</strong> Kunratice</div>
+          <div class="info-item"><strong>Nemovitost - druh:</strong> parcela</div>
+
+          <!-- TABULKA PARCEL (rozšířená o Typ a UP) -->
+          <table>
+            <tr>
+              <th>Parcelní číslo</th>
+              <th>Typ parcely</th>
+              <th>Plocha (m²)</th>
+              <th>Cena (Kč)</th>
+              <th>JC avg(Kč/m²)</th>
+              <th>UP (převažující funkční využití)</th>
+            </tr>
+    
+          <tr><td>2372/87</td><td>zastavěná plocha a nádvoří</td><td>10</td><td>54 920</td><td>5 492</td><td>DH</td></tr>
+<tr><td>2372/35</td><td>orná půda</td><td>4 250</td><td>23 341 000</td><td>5 492</td><td>DH</td></tr>
+<tr><td>2372/31</td><td>orná půda</td><td>4 382</td><td>24 065 944</td><td>5 492</td><td>IZ</td></tr>
+<tr><td>2372/34</td><td>orná půda</td><td>804</td><td>4 415 568</td><td>5 492</td><td>IZ</td></tr>
+<tr><td>2372/36</td><td>orná půda</td><td>387</td><td>2 125 404</td><td>5 492</td><td>DH</td></tr>
+
+          </table>
+        </div>  <!-- end left-panel -->
+        <div class="right-panel">
+          <iframe class="iframe-container iframe-top"    src="maps/map_top_V-19568_2025-101.html"></iframe>
+          <iframe class="iframe-container iframe-bottom" src="maps/map_bottom_V-19568_2025-101.html"></iframe>
+        </div>  <!-- end right-panel -->
+      </div>  <!-- end container -->
+    </body>
+    </html>
+    
