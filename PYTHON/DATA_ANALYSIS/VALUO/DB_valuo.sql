@@ -211,7 +211,10 @@ order by okres, kat_uzemi, rok, mesic desc;
 --  ///////////////////////////////////////      POZEMKY / JC        ///////////////////////////////////////
 
 
-DECLARE @KU NVARCHAR(MAX) = 'Veleslavín,Liboc';
+DECLARE @KU NVARCHAR(MAX) = 'Kunratice,Písnice,Krè,Michle,Nusle';
+DECLARE @UP NVARCHAR(MAX) = 'DH,DU,ZMK,IZ,S1,S2,S3,S4';
+DECLARE @JC_MIN float = 999;
+DECLARE @JC_MAX float = 15000;
 
 WITH AgregovanaData AS (
   SELECT 
@@ -239,7 +242,6 @@ WITH AgregovanaData AS (
   GROUP BY cislo_vkladu
 )
 
-
 SELECT 
   vd.*,
   kn.parcel_number,
@@ -247,26 +249,37 @@ SELECT
   kn.zoning_title,
   ad.[#PARCEL],
   ad.[#CELKOVA_VYMERA],
-  CONVERT(DECIMAL(10,1), ROUND((ad.cenovy_udaj / NULLIF(ad.[#CELKOVA_VYMERA], 0)), 1, 1)) AS [#JC]
+  CONVERT(DECIMAL(10,1), ROUND((ad.cenovy_udaj / NULLIF(ad.[#CELKOVA_VYMERA], 0)), 1, 1)) AS [#JC],
+  up.POPIS_Z
 FROM [valuo].[dbo].[Valuo_data] vd
 JOIN AgregovanaData ad ON vd.cislo_vkladu = ad.cislo_vkladu
 LEFT JOIN [valuo].[dbo].[KN_parcel_data] kn ON vd.id = kn.id_valuo
+LEFT JOIN [valuo].[dbo].[UP_FVU_data] up ON kn.id_UP_FVU_data = up.id
+
 WHERE 
-  vd.kat_uzemi IN (
+  CONVERT(DECIMAL(10,1), ROUND((ad.cenovy_udaj / NULLIF(ad.[#CELKOVA_VYMERA], 0)), 1, 1)) > @JC_MIN 
+  AND CONVERT(DECIMAL(10,1), ROUND((ad.cenovy_udaj / NULLIF(ad.[#CELKOVA_VYMERA], 0)), 1, 1)) < @JC_MAX 
+
+  AND vd.kat_uzemi IN (
     SELECT LTRIM(RTRIM(value))
     FROM STRING_SPLIT(@KU, ',')
   )
+  AND (
+    up.POPIS_Z IS NOT NULL AND EXISTS (
+      SELECT 1
+      FROM STRING_SPLIT(@UP, ',') s
+      WHERE up.POPIS_Z LIKE '%' + LTRIM(RTRIM(s.value)) + '%'
+    )
+  )
 ORDER BY [#JC] DESC;
-
-
-select * from [dbo].[KN_parcel_data]
-
-select * from [dbo].[Valuo_data]
 
 
 --  ///////////////////////////////////////      POZEMKY / JC        ///////////////////////////////////////
 
 
+select * from [dbo].[KN_parcel_data]
+
+select * from [dbo].[Valuo_data]
 
 
 
@@ -298,11 +311,13 @@ where 1=1
 	  and cislo_vkladu = 'V-7974/2024-101'
 
 
-	  select * from [valuo].[dbo].[KN_parcel_data]
+select * from [valuo].[dbo].[KN_parcel_data]
 where 1=1
       and id_valuo = 20783
 
+select * from [dbo].[UP_FVU_data]
 
+/*
 UPDATE [valuo].[dbo].[Valuo_data]
 SET
     --LAT = 50.0460758,         -- nová hodnota LAT
@@ -312,3 +327,4 @@ SET
 	cenovy_udaj = 7750000
 WHERE
     Id = 11269;             -- identifikátor øádku, který chcete upravit
+*/
