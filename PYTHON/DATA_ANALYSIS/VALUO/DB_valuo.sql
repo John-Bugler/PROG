@@ -195,7 +195,7 @@ select
      count(case when nemovitost = 'parcela' then 1 end) as [parcela]  -- poèet parcel
 from [valuo].[dbo].[valuo_data] vd
 where 1=1
-      and kat_uzemi = 'Dejvice'
+      and kat_uzemi = 'Modøany'
 group by
      okres,
      kat_uzemi,
@@ -307,8 +307,10 @@ where 1=1
 
 select * from [valuo].[dbo].[Valuo_data] 
 where 1=1
-      
-	  and cislo_vkladu = 'V-7974/2024-101'
+      and typ = 'byt'
+	  and kat_uzemi = 'Modøany'
+	  --and plocha = 357
+	  and cislo_vkladu = 'V-76715/2024-101'
 
 
 select * from [valuo].[dbo].[KN_parcel_data]
@@ -323,8 +325,8 @@ SET
     --LAT = 50.0460758,         -- nová hodnota LAT
     --LON = 14.3296703,          -- nová hodnota LON
 	--adresa = 'Bronzová 2018/17'
-	--plocha = 216.0
-	cenovy_udaj = 7750000
+	plocha = 74.0
+	--cenovy_udaj = 7750000
 WHERE
-    Id = 11269;             -- identifikátor øádku, který chcete upravit
+    Id in (29561);             -- identifikátor øádku, který chcete upravit
 */
