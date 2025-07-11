@@ -61,3 +61,10 @@ SELECT
 FROM ValidValuo AS V
 LEFT JOIN dbo.KN_parcel_data AS K ON K.id_valuo = V.id
 LEFT JOIN NemovitostCounts AS NC ON NC.cislo_vkladu = V.cislo_vkladu
+WHERE 1=1
+      AND V.cislo_vkladu = 'V-1718/2024-209'
+
+
+
+
+

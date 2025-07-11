@@ -279,7 +279,8 @@ ORDER BY [#JC] DESC;
 
 select * from [dbo].[KN_parcel_data]
 
-select * from [dbo].[Valuo_data]
+select distinct typ from [dbo].[Valuo_data]
+where nemovitost = 'budova'
 
 
 
@@ -304,13 +305,28 @@ where 1=1
 
 */
 
+select * from dbo.KN_parcel_data
+
+
+select distinct popis from [valuo].[dbo].[Valuo_data] 
+where 1=1
+        and nemovitost = 'budova'
+
+            SELECT TOP 20 id AS id_valuo, kat_uzemi, adresa, popis
+            FROM Valuo_data 
+            WHERE 1=1
+                AND kat_uzemi = 'Kunratice'
+                AND nemovitost = 'budova'
+                AND KN_WFS_info IS NULL;
 
 select * from [valuo].[dbo].[Valuo_data] 
 where 1=1
-      and typ = 'byt'
-	  and kat_uzemi = 'Modøany'
+        and nemovitost = 'budova'
+        and popis like '%parcele%'
+	  --and typ = 'byt'
+	  --and kat_uzemi = 'Modøany'
 	  --and plocha = 357
-	  and cislo_vkladu = 'V-76715/2024-101'
+	  --and cislo_vkladu = 'V-10050/2025-101'
 
 
 select * from [valuo].[dbo].[KN_parcel_data]
