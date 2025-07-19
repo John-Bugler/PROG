@@ -6,25 +6,30 @@ WITH ValidValuo AS (
         FROM dbo.Valuo_data
         GROUP BY cislo_vkladu
         HAVING 
-            -- právì 1 hlavní budova
             SUM(CASE WHEN nemovitost = 'budova' AND typ IN (
                 'rodinný dùm', 'objekt k bydlení', 'zemìdìlská usedlost') THEN 1 ELSE 0 END) = 1
-            -- žádné jiné budovy mimo garáž, jiná stavba
             AND SUM(CASE WHEN nemovitost = 'budova' AND typ NOT IN (
                 'rodinný dùm', 'objekt k bydlení', 'zemìdìlská usedlost', 'garáž', 'jiná stavba') THEN 1 ELSE 0 END) = 0
-            -- alespoò jedna parcela
             AND SUM(CASE WHEN nemovitost = 'parcela' THEN 1 ELSE 0 END) >= 1
-            -- žádná chyba v GPS
             AND SUM(CASE WHEN GPS_API_info = 'ERR' THEN 1 ELSE 0 END) = 0
     )
 ),
-NemovitostCounts AS (
-    SELECT cislo_vkladu,
-           COUNT(*) AS NemovitostCount
+NemovitostTypCounts AS (
+    SELECT
+        cislo_vkladu,
+        COUNT(*) AS NemovitostCount,
+        SUM(CASE WHEN nemovitost = 'budova' THEN 1 ELSE 0 END) AS BudovaCount,
+        SUM(CASE WHEN nemovitost = 'parcela' THEN 1 ELSE 0 END) AS ParcelaCount
     FROM dbo.Valuo_data
     GROUP BY cislo_vkladu
+),
+FC_Identifikace AS (
+    SELECT cislo_vkladu,
+           DENSE_RANK() OVER (ORDER BY cislo_vkladu) AS id_fc
+    FROM (SELECT DISTINCT cislo_vkladu FROM ValidValuo) AS sub
 )
 SELECT 
+    FC.id_fc,
     V.*,
     K.kat_uzemi,
     K.upper_zoning_id,
@@ -56,15 +61,12 @@ SELECT
         ELSE NULL
     END AS JC,
 
-    NC.NemovitostCount AS [#NEM]
+    TC.NemovitostCount AS [#NEM],
+    TC.BudovaCount AS [#BUDOVA],
+    TC.ParcelaCount AS [#PARCELA]
 
 FROM ValidValuo AS V
 LEFT JOIN dbo.KN_parcel_data AS K ON K.id_valuo = V.id
-LEFT JOIN NemovitostCounts AS NC ON NC.cislo_vkladu = V.cislo_vkladu
-WHERE 1=1
-      AND V.cislo_vkladu = 'V-1718/2024-209'
-
-
-
-
-
+LEFT JOIN NemovitostTypCounts AS TC ON TC.cislo_vkladu = V.cislo_vkladu
+LEFT JOIN FC_Identifikace AS FC ON FC.cislo_vkladu = V.cislo_vkladu
+ORDER BY id_fc ASC

@@ -277,7 +277,7 @@ ORDER BY [#JC] DESC;
 --  ///////////////////////////////////////      POZEMKY / JC        ///////////////////////////////////////
 
 
-select * from [dbo].[KN_parcel_data]
+
 
 select distinct typ from [dbo].[Valuo_data]
 where nemovitost = 'budova'
@@ -305,24 +305,42 @@ where 1=1
 
 */
 
-select * from dbo.KN_parcel_data
+                    
 
+SELECT id AS id_valuo, KN_WFS_info, nemovitost, okres, v.kat_uzemi, adresa, popis, kn.* 
+FROM Valuo_data v
+left join KN_parcel_data kn on v.id = kn.id_valuo
+WHERE 1=1
+      --and KN_WFS_info = 0
+	  and id in (23, 37, 45, 117, 160, 165, 173, 188, 204, 208, 5998, 7763, 12676)
+                ORDER BY V.id ASC
+
+
+
+/*
+DELETE from dbo.KN_parcel_data
+where id_valuo  in (23, 37, 45, 117, 160, 165, 173, 188, 204, 208, 5998, 7763, 12676)
+
+UPDATE [valuo].[dbo].[Valuo_data]
+SET
+	KN_WFS_info = NULL
+WHERE
+    Id in (23, 37, 45, 117, 160, 165, 173, 188, 204, 208, 5998, 7763, 12676)
+
+*/
 
 select distinct popis from [valuo].[dbo].[Valuo_data] 
 where 1=1
         and nemovitost = 'budova'
 
-            SELECT TOP 20 id AS id_valuo, kat_uzemi, adresa, popis
-            FROM Valuo_data 
-            WHERE 1=1
-                AND kat_uzemi = 'Kunratice'
-                AND nemovitost = 'budova'
-                AND KN_WFS_info IS NULL;
+
 
 select * from [valuo].[dbo].[Valuo_data] 
 where 1=1
-        and nemovitost = 'budova'
-        and popis like '%parcele%'
+	  and KN_WFS_info = 0
+      and nemovitost = 'budova'
+      --and nemovitost = 'parcela'
+      --and popis like '%parcele%'
 	  --and typ = 'byt'
 	  --and kat_uzemi = 'Modøany'
 	  --and plocha = 357
@@ -341,8 +359,13 @@ SET
     --LAT = 50.0460758,         -- nová hodnota LAT
     --LON = 14.3296703,          -- nová hodnota LON
 	--adresa = 'Bronzová 2018/17'
-	plocha = 74.0
+	-- plocha = 74.0
 	--cenovy_udaj = 7750000
+	KN_WFS_info = NULL
 WHERE
-    Id in (29561);             -- identifikátor øádku, který chcete upravit
+    Id in (47687);             -- identifikátor øádku, který chcete upravit
+
+
+
+
 */
