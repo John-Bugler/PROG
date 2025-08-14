@@ -63,7 +63,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         #'DIRS': [BASE_DIR, 'templates'],             # directories - zakladni adresar pro templates projektu
-        'DIRS': [r'C:/Users/ijttr/OneDrive/Dokumenty/PROG/PYTHON/django_projects/revolut/templates'],   # pouzita explicirni cesta
+        'DIRS': [r'E:/PROG/PYTHON/django_projects/revolut/templates'],   # pouzita explicirni cesta
 
         'APP_DIRS': True,
         'OPTIONS': {
@@ -156,7 +156,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 #STATICFILES_DIRS = [BASE_DIR, 'static']          # directories - zakladni adresar pro static
-STATICFILES_DIRS = [r'C:/Users/ijttr/OneDrive/Dokumenty/PROG/PYTHON/django_projects/revolut/static']
+STATICFILES_DIRS = [r'E:/PROG/PYTHON/django_projects/revolut/static']
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
