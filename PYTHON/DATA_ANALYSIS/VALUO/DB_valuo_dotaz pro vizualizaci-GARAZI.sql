@@ -1,5 +1,3 @@
-
-
 WITH ValidValuo AS (
     SELECT *
     FROM dbo.Valuo_data
@@ -7,9 +5,18 @@ WITH ValidValuo AS (
         SELECT cislo_vkladu
         FROM dbo.Valuo_data
         GROUP BY cislo_vkladu
-        HAVING COUNT(*) = 1
-           AND MAX(typ) = 'garáž'
+        HAVING COUNT(*) <= 4    -- pocet samostatnych zaznamu (nemovitosti) v ramci jednoho V - cisla vkladu
+           AND MAX(typ) = N'garáž'
     )
+),
+KN_one AS (
+    SELECT
+        K.*,
+        ROW_NUMBER() OVER (
+            PARTITION BY K.id_valuo
+            ORDER BY K.parcel_number, K.gml_id
+        ) AS rn
+    FROM dbo.KN_parcel_data AS K
 )
 SELECT 
     V.*,
@@ -40,10 +47,11 @@ SELECT
          AS DECIMAL(38,0)
     ) AS JC
 FROM ValidValuo AS V
-LEFT JOIN dbo.KN_parcel_data AS K
+LEFT JOIN KN_one AS K
     ON K.id_valuo = V.id
-WHERE 1 = 1
-  AND V.plocha > 0
+   AND K.rn = 1
+WHERE V.plocha > 0
   AND V.cenovy_udaj <> 0
-  --AND cislo_vkladu = 'V-11359/2024-101'
-  AND V.kat_uzemi in ('Krè', 'Nusle', 'Písnice', 'Modøany', 'Kamýk', 'Lhotka', 'Chodov', 'Háje', 'Kunratice')
+  --AND V.cislo_vkladu = N'V-49615/2023-101'
+  AND V.kat_uzemi IN (N'Nové Mìsto')
+  AND V.adresa LIKE N'%Senovážné%'

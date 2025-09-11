@@ -56,3 +56,7 @@
             ON PC.cislo_vkladu = V.cislo_vkladu
         WHERE 1 = 1
             --and v.kat_uzemi in ('Malešice', 'Štìrboholy', 'Kyje')  
+			 and v.cislo_vkladu = 'V-77826/2024-101'
+
+
+
