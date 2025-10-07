@@ -195,7 +195,8 @@ select
      count(case when nemovitost = 'parcela' then 1 end) as [parcela]  -- poèet parcel
 from [valuo].[dbo].[valuo_data] vd
 where 1=1
-      and kat_uzemi in ('Modøany', 'Malá Strana', 'Vinohrady')
+      and kat_uzemi in ('Malešice', 'Strašnice', 'Hostivaø','Štìrboholy')
+	  and rok = '2025'
 group by
      okres,
      kat_uzemi,
@@ -211,10 +212,10 @@ order by okres, kat_uzemi, rok, mesic desc;
 --  ///////////////////////////////////////      POZEMKY / JC        ///////////////////////////////////////
 
 
-DECLARE @KU NVARCHAR(MAX) = 'Kunratice,Písnice,Krè,Michle,Nusle';
-DECLARE @UP NVARCHAR(MAX) = 'DH,DU,ZMK,IZ,S1,S2,S3,S4';
+DECLARE @KU NVARCHAR(MAX) = 'Malešice';
+DECLARE @UP NVARCHAR(MAX) = 'SV,SG,OB,DH,DU,ZMK,IZ,S1,S2,S3,S4';
 DECLARE @JC_MIN float = 999;
-DECLARE @JC_MAX float = 15000;
+DECLARE @JC_MAX float = 60000;
 
 WITH AgregovanaData AS (
   SELECT 
@@ -289,9 +290,10 @@ where nemovitost = 'budova'
 /*
 select * from [valuo].[dbo].[Valuo_data] 
 where 1=1
-      and id = 1077
-	  and LAT is NULL and LON is NULL
-	  and adresa <> 'Neznámá adresa'
+      and cislo_vkladu = 'V-35557/2025-101'
+	  --and id = 1077
+	  --and LAT is NULL and LON is NULL
+	  --and adresa <> 'Neznámá adresa'
 
 */
 
@@ -312,8 +314,9 @@ FROM Valuo_data v
 left join KN_parcel_data kn on v.id = kn.id_valuo
 WHERE 1=1
       --and KN_WFS_info = 0
-	  and id in (23, 37, 45, 117, 160, 165, 173, 188, 204, 208, 5998, 7763, 12676)
-                ORDER BY V.id ASC
+	  --and id in (23, 37, 45, 117, 160, 165, 173, 188, 204, 208, 5998, 7763, 12676)
+       and v.cislo_vkladu = 'V-35557/2025-101' 
+		ORDER BY V.id ASC
 
 
 
@@ -366,6 +369,15 @@ WHERE
     Id in (47687);             -- identifikátor øádku, který chcete upravit
 
 
+
+
+	select * from [dbo].[KN_parcel_data] kn
+left join [dbo].[Valuo_data] v on kn.id_valuo = v.id
+where 1=1
+      and id_UP_FVU_data is null          -- pouze ty parcely ktere nejsou sparovány s UP FVU
+	  and v.okres = 'Hlavní mìsto Praha'    -- pouze Praha, jde o UP Prahy
+	  --and parcel_number is null
+	  --and geometry is null
 
 
 */
