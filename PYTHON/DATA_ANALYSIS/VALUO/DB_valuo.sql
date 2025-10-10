@@ -195,7 +195,7 @@ select
      count(case when nemovitost = 'parcela' then 1 end) as [parcela]  -- poèet parcel
 from [valuo].[dbo].[valuo_data] vd
 where 1=1
-      and kat_uzemi in ('Malešice', 'Strašnice', 'Hostivaø','Štìrboholy')
+      and kat_uzemi in ('Horní Poèernice')
 	  and rok = '2025'
 group by
      okres,
