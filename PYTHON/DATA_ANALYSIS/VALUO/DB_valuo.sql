@@ -363,11 +363,11 @@ SET
     --LON = 14.3296703,          -- nová hodnota LON
 	--adresa = 'Bronzová 2018/17'
 	-- plocha = 74.0
-	--cenovy_udaj = 7750000
-	KN_WFS_info = NULL
+	cenovy_udaj = 6900000
+	--KN_WFS_info = NULL
 WHERE
-    Id in (47687);             -- identifikátor øádku, který chcete upravit
-
+    --Id in (47687);             -- identifikátor øádku, který chcete upravit
+	  cislo_vkladu = 'V-320/2025-606'
 
 
 
