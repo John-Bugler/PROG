@@ -195,7 +195,7 @@ select
      count(case when nemovitost = 'parcela' then 1 end) as [parcela]  -- poèet parcel
 from [valuo].[dbo].[valuo_data] vd
 where 1=1
-      and kat_uzemi in ('Krè')
+      and kat_uzemi in ('nUSLE')
 	  and rok in ('2024','2025')
 group by
      okres,
@@ -212,7 +212,7 @@ order by okres, kat_uzemi, rok, mesic desc;
 --  ///////////////////////////////////////      POZEMKY / JC        ///////////////////////////////////////
 
 
-DECLARE @KU NVARCHAR(MAX) = 'Krè';
+DECLARE @KU NVARCHAR(MAX) = 'Nusle';
 DECLARE @UP NVARCHAR(MAX) = 'SV,SG,OB,DH,DU,ZMK,IZ,S1,S2,S3,S4';
 DECLARE @JC_MIN float = 999;
 DECLARE @JC_MAX float = 60000;
