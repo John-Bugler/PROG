@@ -195,7 +195,7 @@ select
      count(case when nemovitost = 'parcela' then 1 end) as [parcela]  -- poèet parcel
 from [valuo].[dbo].[valuo_data] vd
 where 1=1
-      and kat_uzemi in ('Košíøe')
+      and kat_uzemi in ('Libeò')
 	  and rok in ('2023','2024','2025','2026')
 group by
      okres,
@@ -380,6 +380,15 @@ where 1=1
 	  and v.okres = 'Hlavní mìsto Praha'    -- pouze Praha, jde o UP Prahy
 	  --and parcel_number is null
 	  --and geometry is null
+
+
+ SELECT DISTINCT v.cislo_vkladu
+        FROM Valuo_data v
+        JOIN KN_parcel_data p ON v.id = p.id_valuo
+        WHERE v.okres = 'Praha' 
+          AND v.kat_uzemi = 'Libeò' 
+          AND p.parcel_number = '567'
+
 
 
 */
