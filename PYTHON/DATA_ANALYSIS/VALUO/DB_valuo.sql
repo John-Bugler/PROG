@@ -195,7 +195,7 @@ select
      count(case when nemovitost = 'parcela' then 1 end) as [parcela]  -- poèet parcel
 from [valuo].[dbo].[valuo_data] vd
 where 1=1
-      and kat_uzemi in ('Libeò')
+      and kat_uzemi in ('Køenice u Prahy')
 	  and rok in ('2023','2024','2025','2026')
 group by
      okres,
@@ -342,19 +342,19 @@ where 1=1
 
 select * from [valuo].[dbo].[Valuo_data] 
 where 1=1
-	  and KN_WFS_info = 0
-      and nemovitost = 'budova'
+	  --and KN_WFS_info = 0
+      --and nemovitost = 'budova'
       --and nemovitost = 'parcela'
       --and popis like '%parcele%'
 	  --and typ = 'byt'
-	  --and kat_uzemi = 'Modøany'
+	  --and kat_uzemi = 'Psáry'
 	  --and plocha = 357
-	  --and cislo_vkladu = 'V-10050/2025-101'
+	  and cislo_vkladu in ('V-636/2026-210', 'V-13439/2025-210')
 
 
 select * from [valuo].[dbo].[KN_parcel_data]
 where 1=1
-      and id_valuo = 20783
+      and id_valuo = 112158
 
 select * from [dbo].[UP_FVU_data]
 
@@ -392,3 +392,38 @@ where 1=1
 
 
 */
+
+
+
+WITH FilteredVklady AS (
+    SELECT 
+        cislo_vkladu,
+        SUM(CASE WHEN nemovitost <> 'parcela' THEN 1 ELSE 0 END) as pocet_jinych_nemovitosti
+    FROM Valuo_data
+    GROUP BY cislo_vkladu
+)
+SELECT 
+    CAST(V.okres AS NVARCHAR(200)) AS okres, 
+    CAST(V.kat_uzemi AS NVARCHAR(200)) AS kat_uzemi, 
+    CAST(K.parcel_number AS NVARCHAR(100)) AS parcelni_cislo,
+    CAST(COALESCE(K.areaValue_m2, V.plocha) AS VARCHAR(100)) AS vymera, 
+    CAST(U.POPIS_Z AS NVARCHAR(100)) AS uzemni_plan,
+    CONVERT(VARCHAR(20), V.datum_podani, 120) AS datum_podani, 
+    CAST(V.cislo_vkladu AS VARCHAR(100)) AS cislo_vkladu, 
+    CAST(V.cenovy_udaj AS VARCHAR(100)) AS cenovy_udaj
+FROM Valuo_data V
+LEFT JOIN KN_parcel_data K ON V.id = K.id_valuo
+LEFT JOIN UP_FVU_data U ON K.id_UP_FVU_data = U.id
+INNER JOIN FilteredVklady FV ON V.cislo_vkladu = FV.cislo_vkladu
+WHERE 
+    V.nemovitost = 'parcela' 
+    AND FV.pocet_jinych_nemovitosti = 0 
+    AND V.okres IN ('Praha-západ')
+    AND V.kat_uzemi IN ('Psáry')
+    AND NULLIF(V.okres, '') IS NOT NULL
+    AND NULLIF(V.kat_uzemi, '') IS NOT NULL
+    AND NULLIF(K.parcel_number, '') IS NOT NULL
+    AND V.datum_podani IS NOT NULL
+    AND NULLIF(V.cislo_vkladu, '') IS NOT NULL
+    AND V.cenovy_udaj IS NOT NULL
+    AND COALESCE(K.areaValue_m2, V.plocha) IS NOT NULL
